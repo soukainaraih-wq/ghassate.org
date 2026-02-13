@@ -1,8 +1,10 @@
+/* Ghassate Organization – main stylesheet */
 :root {
   --bg: #f5efe3;
   --bg-alt: #fdf8ef;
   --panel: #fffdf8;
   --ink: #152b24;
+  --_v: 2;
   --muted: #4e6159;
   --line: #d8e3dc;
   --primary: #0d3a2a;
