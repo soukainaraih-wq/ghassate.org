@@ -288,6 +288,90 @@ export default function DashboardPage() {
     [cms]
   );
 
+  const draftPagesCount = useMemo(() => {
+    const items = Array.isArray(cms?.pages) ? cms.pages : [];
+    return items.filter((item) => String(item?.status || "published").toLowerCase() === "draft").length;
+  }, [cms?.pages]);
+
+  const missingSlugCount = useMemo(() => {
+    const groups = [
+      ...(Array.isArray(cms?.projects) ? cms.projects : []),
+      ...(Array.isArray(cms?.news) ? cms.news : []),
+      ...(Array.isArray(cms?.pages) ? cms.pages : []),
+      ...(Array.isArray(cms?.media) ? cms.media : [])
+    ];
+
+    return groups.filter((item) => !String(item?.slug || "").trim()).length;
+  }, [cms?.projects, cms?.news, cms?.pages, cms?.media]);
+
+  const contentModules = useMemo(
+    () => [
+      {
+        key: "projects",
+        tab: "projects",
+        title: isArabic ? "وحدة المشاريع" : "Projects Unit",
+        subtitle: isArabic ? "برامج المؤسسة والمبادرات" : "Programs and initiatives",
+        count: tabTotals.projects
+      },
+      {
+        key: "news",
+        tab: "news",
+        title: isArabic ? "غرفة الأخبار" : "Newsroom",
+        subtitle: isArabic ? "الأخبار والتحديثات" : "News and updates",
+        count: tabTotals.news
+      },
+      {
+        key: "pages",
+        tab: "pages",
+        title: isArabic ? "صفحات الموقع" : "Site Pages",
+        subtitle: isArabic ? "الصفحات الثابتة والمحتوى" : "Static pages and content",
+        count: tabTotals.pages
+      },
+      {
+        key: "media",
+        tab: "media",
+        title: isArabic ? "مكتبة الوسائط" : "Media Library",
+        subtitle: isArabic ? "صور، فيديو، ووثائق" : "Images, videos, and documents",
+        count: tabTotals.media
+      }
+    ],
+    [isArabic, tabTotals]
+  );
+
+  const recentActivity = useMemo(() => {
+    const rows = [];
+
+    const projectItems = Array.isArray(cms?.projects) ? cms.projects.slice(0, 2) : [];
+    const newsItems = Array.isArray(cms?.news) ? cms.news.slice(0, 2) : [];
+    const pageItems = Array.isArray(cms?.pages) ? cms.pages.slice(0, 2) : [];
+
+    projectItems.forEach((item) => {
+      rows.push({
+        key: `project-${item.id}`,
+        label: isArabic ? "مشروع" : "Project",
+        title: previewLocalized(item.title, lang)
+      });
+    });
+
+    newsItems.forEach((item) => {
+      rows.push({
+        key: `news-${item.id}`,
+        label: isArabic ? "خبر" : "News",
+        title: previewLocalized(item.title, lang)
+      });
+    });
+
+    pageItems.forEach((item) => {
+      rows.push({
+        key: `page-${item.id}`,
+        label: isArabic ? "صفحة" : "Page",
+        title: previewLocalized(item.title, lang)
+      });
+    });
+
+    return rows.slice(0, 6);
+  }, [cms?.projects, cms?.news, cms?.pages, isArabic, lang]);
+
   const filteredProjects = useMemo(() => {
     const items = Array.isArray(cms?.projects) ? cms.projects : [];
     return items.filter((item) =>
@@ -870,26 +954,74 @@ export default function DashboardPage() {
                       ))}
                     </div>
 
-                    <article className="surface-card admin-help-note">
-                      <h3>{isArabic ? "كيف تنعكس التعديلات على الاستضافة؟" : "How do updates reach hosting?"}</h3>
-                      <ol className="admin-steps">
-                        <li>
-                          {isArabic
-                            ? "احفظ التعديلات من هذه البوابة (تُكتب في ملف CMS داخل API)."
-                            : "Save updates in this portal (written to the CMS storage file in the API)."}
-                        </li>
-                        <li>
-                          {isArabic
-                            ? "إذا عدلت كود الواجهة: نفّذ build ثم ارفع محتوى frontend/dist إلى public_html."
-                            : "If you changed frontend code: run build, then upload frontend/dist to public_html."}
-                        </li>
-                        <li>
-                          {isArabic
-                            ? "إذا عدلت كود الـAPI: ارفع backend-php/api إلى public_html/api."
-                            : "If you changed API code: upload backend-php/api to public_html/api."}
-                        </li>
-                      </ol>
-                    </article>
+                    <div className="admin-command-grid">
+                      <article className="surface-card admin-command-card">
+                        <div className="admin-command-head">
+                          <h3>{isArabic ? "هيكل المحتوى" : "Content Architecture"}</h3>
+                          <span>{isArabic ? "وحدات النشر" : "Publishing Units"}</span>
+                        </div>
+                        <div className="admin-module-list">
+                          {contentModules.map((module) => (
+                            <button
+                              key={module.key}
+                              type="button"
+                              className="admin-module-item"
+                              onClick={() => setActiveTab(module.tab)}
+                            >
+                              <div>
+                                <strong>{module.title}</strong>
+                                <small>{module.subtitle}</small>
+                              </div>
+                              <span>{module.count}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </article>
+
+                      <article className="surface-card admin-command-card">
+                        <div className="admin-command-head">
+                          <h3>{isArabic ? "جاهزية النشر" : "Publishing Readiness"}</h3>
+                          <span>{isArabic ? "فحص سريع" : "Quick Check"}</span>
+                        </div>
+                        <ul className="admin-check-list">
+                          <li>
+                            <span>{isArabic ? "الصفحات المسودة" : "Draft pages"}</span>
+                            <strong>{draftPagesCount}</strong>
+                          </li>
+                          <li>
+                            <span>{isArabic ? "عناصر بدون Slug" : "Entries missing slug"}</span>
+                            <strong>{missingSlugCount}</strong>
+                          </li>
+                          <li>
+                            <span>{isArabic ? "رسائل التواصل" : "Contact messages"}</span>
+                            <strong>{summary?.totals?.contactSubmissions ?? 0}</strong>
+                          </li>
+                          <li>
+                            <span>{isArabic ? "مشتركو النشرة" : "Newsletter subscribers"}</span>
+                            <strong>{summary?.totals?.newsletterSubscribers ?? 0}</strong>
+                          </li>
+                        </ul>
+                      </article>
+
+                      <article className="surface-card admin-command-card admin-command-activity">
+                        <div className="admin-command-head">
+                          <h3>{isArabic ? "آخر المحتويات" : "Recent Entries"}</h3>
+                          <span>{isArabic ? "متابعة التحرير" : "Editorial Feed"}</span>
+                        </div>
+                        <div className="admin-activity-list">
+                          {recentActivity.length ? (
+                            recentActivity.map((row) => (
+                              <div key={row.key} className="admin-activity-item">
+                                <em>{row.label}</em>
+                                <strong>{row.title || (isArabic ? "بدون عنوان" : "Untitled")}</strong>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="admin-empty-state">{isArabic ? "لا يوجد محتوى بعد." : "No content yet."}</p>
+                          )}
+                        </div>
+                      </article>
+                    </div>
                   </>
                 ) : null}
 
