@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import Seo from "../components/Seo";
@@ -26,6 +26,31 @@ const TOKEN_STORAGE_KEY = "ghassate_admin_jwt";
 const TAB_STORAGE_KEY = "ghassate_dashboard_tab";
 const tabs = ["overview", "settings", "projects", "news", "pages", "media"];
 const localizedTemplate = { ar: "", zgh: "", en: "" };
+
+/* ── Inline SVG Icons ── */
+const I = (d, vb = "0 0 24 24") => (
+  <svg viewBox={vb} className="tab-icon">
+    <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const tabIconMap = {
+  overview: I("M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"),
+  settings: I("M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z"),
+  projects: I("M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"),
+  news: I("M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"),
+  pages: I("M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"),
+  media: I("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),
+};
+
+const kpiIcons = [
+  "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10",
+  "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z",
+  "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+  "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z",
+  "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+  "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9",
+];
 
 function toTextMap(value) {
   return {
@@ -193,6 +218,13 @@ export default function DashboardPage() {
   const [pageStatusFilter, setPageStatusFilter] = useState("all");
   const [mediaQuery, setMediaQuery] = useState("");
   const [mediaTypeFilter, setMediaTypeFilter] = useState("all");
+  const [toasts, setToasts] = useState([]);
+
+  const pushToast = useCallback((msg, type = "success") => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, msg, type }]);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500);
+  }, []);
 
   const tabLabels = useMemo(
     () => ({
@@ -399,7 +431,7 @@ export default function DashboardPage() {
     try {
       await updateAdminSettings(token, settingsForm);
       await loadCms(token);
-      setNotice(isArabic ? "تم حفظ الإعدادات." : "Settings saved.");
+      pushToast(isArabic ? "تم حفظ الإعدادات." : "Settings saved.");
     } catch (requestError) {
       setError(requestError.message || "Settings save failed.");
     } finally {
@@ -424,7 +456,7 @@ export default function DashboardPage() {
       }
       await loadCms(token);
       resetProjectForm();
-      setNotice(isArabic ? "تم حفظ المشروع." : "Project saved.");
+      pushToast(isArabic ? "تم حفظ المشروع." : "Project saved.");
     } catch (requestError) {
       setError(requestError.message || "Project save failed.");
     } finally {
@@ -442,7 +474,7 @@ export default function DashboardPage() {
     try {
       await deleteAdminProject(token, id);
       await loadCms(token);
-      setNotice(isArabic ? "تم حذف المشروع." : "Project deleted.");
+      pushToast(isArabic ? "تم حذف المشروع." : "Project deleted.");
       if (editingProjectId === id) {
         resetProjectForm();
       }
@@ -470,7 +502,7 @@ export default function DashboardPage() {
       }
       await loadCms(token);
       resetNewsForm();
-      setNotice(isArabic ? "تم حفظ الخبر." : "News saved.");
+      pushToast(isArabic ? "تم حفظ الخبر." : "News saved.");
     } catch (requestError) {
       setError(requestError.message || "News save failed.");
     } finally {
@@ -488,7 +520,7 @@ export default function DashboardPage() {
     try {
       await deleteAdminNews(token, id);
       await loadCms(token);
-      setNotice(isArabic ? "تم حذف الخبر." : "News deleted.");
+      pushToast(isArabic ? "تم حذف الخبر." : "News deleted.");
       if (editingNewsId === id) {
         resetNewsForm();
       }
@@ -518,7 +550,7 @@ export default function DashboardPage() {
       }
       await loadCms(token);
       resetPageForm();
-      setNotice(isArabic ? "تم حفظ الصفحة." : "Page saved.");
+      pushToast(isArabic ? "تم حفظ الصفحة." : "Page saved.");
     } catch (requestError) {
       setError(requestError.message || "Page save failed.");
     } finally {
@@ -536,7 +568,7 @@ export default function DashboardPage() {
     try {
       await deleteAdminPage(token, id);
       await loadCms(token);
-      setNotice(isArabic ? "تم حذف الصفحة." : "Page deleted.");
+      pushToast(isArabic ? "تم حذف الصفحة." : "Page deleted.");
       if (editingPageId === id) {
         resetPageForm();
       }
@@ -560,7 +592,7 @@ export default function DashboardPage() {
       }
       await loadCms(token);
       resetMediaForm();
-      setNotice(isArabic ? "تم حفظ عنصر الوسائط." : "Media saved.");
+      pushToast(isArabic ? "تم حفظ عنصر الوسائط." : "Media saved.");
     } catch (requestError) {
       setError(requestError.message || "Media save failed.");
     } finally {
@@ -578,7 +610,7 @@ export default function DashboardPage() {
     try {
       await deleteAdminMedia(token, id);
       await loadCms(token);
-      setNotice(isArabic ? "تم حذف الوسائط." : "Media deleted.");
+      pushToast(isArabic ? "تم حذف الوسائط." : "Media deleted.");
       if (editingMediaId === id) {
         resetMediaForm();
       }
@@ -624,6 +656,9 @@ export default function DashboardPage() {
         {!token ? (
           <div className="container admin-login-wrap">
             <form className="surface-card admin-login-card" onSubmit={onLogin}>
+              <div className="admin-login-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </div>
               <h3>{isArabic ? "تسجيل الدخول" : "Sign In"}</h3>
               <p>
                 {isArabic
@@ -658,12 +693,11 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="container admin-shell">
-            <div className="admin-toolbar surface-card">
+            <div className="admin-toolbar">
               <div className="admin-toolbar-main">
-                <h3>{isArabic ? "وحدة إدارة الموقع" : "Website Management Desk"}</h3>
-                <p>{isArabic ? "هذه المنطقة لا يجب مشاركتها. استخدم المسار السري والتوكن فقط." : "Keep this area private. Use secret path and admin token only."}</p>
+                <h3>{isArabic ? "لوحة التحكم" : "Dashboard"}</h3>
                 <p className="admin-toolbar-meta">
-                  {isArabic ? "آخر تحديث للبيانات:" : "Last data update:"} <strong>{updatedAtLabel}</strong>
+                  {isArabic ? "آخر تحديث:" : "Last update:"} <strong>{updatedAtLabel}</strong>
                 </p>
               </div>
               <div className="admin-inline-actions">
@@ -677,11 +711,8 @@ export default function DashboardPage() {
             </div>
 
             <div className="admin-layout">
-              <aside className="surface-card admin-sidebar">
-                <h3>{isArabic ? "القائمة الجانبية" : "Sidebar"}</h3>
-                <p className="admin-sidebar-copy">
-                  {isArabic ? "أقسام إدارة المحتوى" : "Content management sections"}
-                </p>
+              <aside className="admin-sidebar">
+                <h3>{isArabic ? "القائمة" : "NAVIGATION"}</h3>
                 <div className="admin-side-nav">
                   {tabs.map((tab) => {
                     const showCount = tab === "projects" || tab === "news" || tab === "pages" || tab === "media";
@@ -692,7 +723,7 @@ export default function DashboardPage() {
                         className={`admin-side-link ${activeTab === tab ? "is-active" : ""}`}
                         onClick={() => setActiveTab(tab)}
                       >
-                        <span>{tabLabels[tab]}</span>
+                        <span className="tab-label">{tabIconMap[tab]}<span>{tabLabels[tab]}</span></span>
                         {showCount ? <span className="admin-tab-count">{tabTotals[tab]}</span> : null}
                       </button>
                     );
@@ -710,30 +741,34 @@ export default function DashboardPage() {
                 {activeTab === "overview" ? (
                   <>
                     <div className="cards-grid grid-3 admin-overview-grid">
-                      <article className="surface-card admin-kpi-card">
-                        <h3>{isArabic ? "عدد المشاريع" : "Projects"}</h3>
-                        <p className="admin-kpi-value">{summary?.totals?.projects ?? cms.projects.length}</p>
-                      </article>
-                      <article className="surface-card admin-kpi-card">
-                        <h3>{isArabic ? "عدد الأخبار" : "News"}</h3>
-                        <p className="admin-kpi-value">{summary?.totals?.news ?? cms.news.length}</p>
-                      </article>
-                      <article className="surface-card admin-kpi-card">
-                        <h3>{isArabic ? "عدد الصفحات" : "Pages"}</h3>
-                        <p className="admin-kpi-value">{summary?.totals?.pages ?? cms.pages?.length ?? 0}</p>
-                      </article>
-                      <article className="surface-card admin-kpi-card">
-                        <h3>{isArabic ? "عدد الوسائط" : "Media"}</h3>
-                        <p className="admin-kpi-value">{summary?.totals?.media ?? cms.media.length}</p>
-                      </article>
-                      <article className="surface-card admin-kpi-card">
-                        <h3>{isArabic ? "رسائل التواصل" : "Contact Messages"}</h3>
-                        <p className="admin-kpi-value">{summary?.totals?.contactSubmissions ?? 0}</p>
-                      </article>
-                      <article className="surface-card admin-kpi-card">
-                        <h3>{isArabic ? "مشتركو النشرة" : "Newsletter Subscribers"}</h3>
-                        <p className="admin-kpi-value">{summary?.totals?.newsletterSubscribers ?? 0}</p>
-                      </article>
+                      {[
+                        { label: isArabic ? "المشاريع" : "Projects", value: summary?.totals?.projects ?? cms.projects.length },
+                        { label: isArabic ? "الأخبار" : "News", value: summary?.totals?.news ?? cms.news.length },
+                        { label: isArabic ? "الصفحات" : "Pages", value: summary?.totals?.pages ?? cms.pages?.length ?? 0 },
+                        { label: isArabic ? "الوسائط" : "Media", value: summary?.totals?.media ?? cms.media.length },
+                        { label: isArabic ? "رسائل التواصل" : "Messages", value: summary?.totals?.contactSubmissions ?? 0 },
+                        { label: isArabic ? "مشتركو النشرة" : "Subscribers", value: summary?.totals?.newsletterSubscribers ?? 0 },
+                      ].map((kpi, i) => (
+                        <article className="surface-card admin-kpi-card" key={kpi.label}>
+                          <span className="kpi-icon"><svg viewBox="0 0 24 24"><path d={kpiIcons[i]} /></svg></span>
+                          <h3>{kpi.label}</h3>
+                          <p className="admin-kpi-value">{kpi.value}</p>
+                        </article>
+                      ))}
+                    </div>
+
+                    <div className="admin-quick-actions">
+                      {[
+                        { label: isArabic ? "مشروع جديد" : "New Project", tab: "projects", icon: "M12 4v16m8-8H4" },
+                        { label: isArabic ? "خبر جديد" : "New Post", tab: "news", icon: "M12 4v16m8-8H4" },
+                        { label: isArabic ? "صفحة جديدة" : "New Page", tab: "pages", icon: "M12 4v16m8-8H4" },
+                        { label: isArabic ? "إعدادات الموقع" : "Site Settings", tab: "settings", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z" },
+                      ].map((qa) => (
+                        <button key={qa.tab} type="button" className="admin-quick-btn" onClick={() => setActiveTab(qa.tab)}>
+                          <svg viewBox="0 0 24 24"><path d={qa.icon} /></svg>
+                          {qa.label}
+                        </button>
+                      ))}
                     </div>
 
                     <article className="surface-card admin-help-note">
@@ -1059,7 +1094,7 @@ export default function DashboardPage() {
                                 >
                                   {isArabic ? "تعديل" : "Edit"}
                                 </button>
-                                <button type="button" className="btn btn-primary" disabled={busy === `project-${item.id}`} onClick={() => removeProject(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `project-${item.id}`} onClick={() => removeProject(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -1147,7 +1182,7 @@ export default function DashboardPage() {
                                 >
                                   {isArabic ? "تعديل" : "Edit"}
                                 </button>
-                                <button type="button" className="btn btn-primary" disabled={busy === `news-${item.id}`} onClick={() => removeNews(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `news-${item.id}`} onClick={() => removeNews(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -1273,7 +1308,7 @@ export default function DashboardPage() {
                                     {isArabic ? "فتح" : "Open"}
                                   </a>
                                 ) : null}
-                                <button type="button" className="btn btn-primary" disabled={busy === `page-${item.id}`} onClick={() => removePage(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `page-${item.id}`} onClick={() => removePage(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -1375,7 +1410,7 @@ export default function DashboardPage() {
                                 >
                                   {isArabic ? "تعديل" : "Edit"}
                                 </button>
-                                <button type="button" className="btn btn-primary" disabled={busy === `media-${item.id}`} onClick={() => removeMedia(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `media-${item.id}`} onClick={() => removeMedia(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -1395,6 +1430,21 @@ export default function DashboardPage() {
           </div>
         )}
       </section>
+
+      {toasts.length > 0 && (
+        <div className="admin-toast">
+          {toasts.map((t) => (
+            <div key={t.id} className={`admin-toast-item is-${t.type}`}>
+              {t.type === "success" ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+              )}
+              {t.msg}
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
