@@ -2486,3 +2486,208 @@ a:focus-visible {
     font-size: 22px;
   }
 }
+
+/* ===== Dashboard V5 Full Rebuild ===== */
+.admin-shell {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(87, 120, 255, 0.12), transparent 35%),
+    radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.1), transparent 28%),
+    linear-gradient(180deg, #0d1220 0%, #0f172a 55%, #101827 100%);
+  border-radius: 24px;
+  padding: 16px;
+}
+
+.admin-layout {
+  direction: ltr;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.admin-sidebar,
+.admin-main {
+  direction: rtl;
+}
+
+.admin-sidebar {
+  background: linear-gradient(180deg, #111c34 0%, #0c1528 100%);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 22px 50px rgba(2, 6, 23, 0.55);
+}
+
+.admin-sidebar::before {
+  background: linear-gradient(90deg, #6366f1, #22d3ee, #a78bfa);
+}
+
+.admin-sidebar h3 {
+  color: rgba(148, 163, 184, 0.7);
+}
+
+.admin-side-link {
+  color: rgba(226, 232, 240, 0.78);
+}
+
+.admin-side-link:hover {
+  background: rgba(99, 102, 241, 0.16);
+  color: #e2e8f0;
+}
+
+.admin-side-link.is-active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(34, 211, 238, 0.16));
+  color: #e0e7ff;
+}
+
+.admin-side-link.is-active::after {
+  background: linear-gradient(180deg, #22d3ee, #6366f1);
+}
+
+.admin-tab-count {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.admin-side-link.is-active .admin-tab-count {
+  background: rgba(99, 102, 241, 0.35);
+}
+
+.admin-toolbar {
+  background: linear-gradient(135deg, #0b1220 0%, #111827 55%, #1e293b 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.45);
+}
+
+.admin-toolbar::before {
+  background: linear-gradient(90deg, #22d3ee, #6366f1, #a78bfa);
+}
+
+.admin-toolbar h3 {
+  color: #f8fafc;
+}
+
+.admin-toolbar p,
+.admin-toolbar-meta strong,
+.admin-autosave-pill strong {
+  color: #cbd5e1;
+}
+
+.admin-autosave-pill {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+}
+
+.admin-toolbar .btn-outline-ink {
+  border-color: rgba(148, 163, 184, 0.45);
+  background: rgba(30, 41, 59, 0.75);
+  color: #e2e8f0;
+}
+
+.admin-toolbar .btn-primary {
+  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);
+}
+
+.admin-main > .surface-card,
+.admin-editor-panel,
+.admin-library-panel,
+.admin-command-card,
+.admin-kpi-card,
+.admin-welcome,
+.admin-quick-btn,
+.admin-list-item,
+.dashboard-field-group {
+  background: rgba(15, 23, 42, 0.76) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  color: #e2e8f0;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.3);
+}
+
+.admin-welcome {
+  background: linear-gradient(135deg, #312e81 0%, #0e7490 48%, #0f172a 100%) !important;
+}
+
+.admin-welcome-text p,
+.admin-command-head span,
+.admin-list-item p,
+.admin-item-meta,
+.admin-check-list span,
+.admin-module-item small,
+.admin-activity-item em,
+.admin-kpi-card h3 {
+  color: #94a3b8 !important;
+}
+
+.admin-kpi-value,
+.admin-list-item h4,
+.admin-command-head h3,
+.admin-module-item strong,
+.admin-activity-item strong,
+.admin-check-list strong {
+  color: #e2e8f0 !important;
+}
+
+.admin-kpi-card::before {
+  background: linear-gradient(180deg, #22d3ee, #6366f1);
+}
+
+.admin-quick-btn svg {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(34, 211, 238, 0.2));
+  stroke: #93c5fd;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select,
+.admin-search-field input,
+.admin-filter-field select,
+.admin-login-card input {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #e2e8f0;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus,
+.admin-search-field input:focus,
+.admin-filter-field select:focus,
+.admin-login-card input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.admin-form label,
+.admin-search-field,
+.admin-filter-field,
+.admin-login-card label,
+.dashboard-field-group h4 {
+  color: #cbd5e1;
+}
+
+.admin-empty-state {
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #94a3b8;
+}
+
+.form-message.success {
+  background: rgba(16, 185, 129, 0.14);
+  color: #a7f3d0;
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+.form-message.error {
+  background: rgba(239, 68, 68, 0.14);
+  color: #fecaca;
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.form-message.loading {
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe;
+  border-color: rgba(59, 130, 246, 0.28);
+}
+
+@media (max-width: 1080px) {
+  .admin-layout {
+    direction: rtl;
+    grid-template-columns: 1fr;
+  }
+}

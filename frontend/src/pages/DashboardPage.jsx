@@ -25,7 +25,7 @@ import { DASHBOARD_SECRET_PATH } from "../lib/runtime-config";
 const TOKEN_STORAGE_KEY = "ghassate_admin_jwt";
 const TAB_STORAGE_KEY = "ghassate_dashboard_tab";
 const DRAFT_STORAGE_PREFIX = "ghassate_dashboard_draft";
-const tabs = ["overview", "projects", "news", "pages", "media", "settings"];
+const tabs = ["overview", "publishing", "projects", "news", "pages", "media", "insights", "settings"];
 const localizedTemplate = { ar: "", zgh: "", en: "" };
 
 /* ── Inline SVG Icons ── */
@@ -37,11 +37,13 @@ const I = (d, vb = "0 0 24 24") => (
 
 const tabIconMap = {
   overview: I("M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"),
+  publishing: I("M12 3v18m0 0l-4-4m4 4l4-4M4 7h16M4 12h8M4 17h12"),
   settings: I("M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z"),
   projects: I("M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"),
   news: I("M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"),
   pages: I("M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"),
   media: I("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),
+  insights: I("M4 19h16M7 16V8m5 8V4m5 12v-6"),
 };
 
 const kpiIcons = [
@@ -307,10 +309,12 @@ export default function DashboardPage() {
   const tabLabels = useMemo(
     () => ({
       overview: isArabic ? "الرئيسية" : "Home",
+      publishing: isArabic ? "مركز النشر" : "Publishing Center",
       projects: isArabic ? "المشاريع" : "Projects",
       news: isArabic ? "الأخبار" : "News",
       pages: isArabic ? "الصفحات" : "Pages",
       media: isArabic ? "مكتبة الوسائط" : "Media Library",
+      insights: isArabic ? "التحليلات" : "Insights",
       settings: isArabic ? "الإعدادات العامة" : "General Settings"
     }),
     [isArabic]
@@ -318,12 +322,14 @@ export default function DashboardPage() {
 
   const tabTotals = useMemo(
     () => ({
+      publishing: (cms?.news?.length || 0) + (cms?.pages?.length || 0),
       projects: cms?.projects?.length || 0,
       news: cms?.news?.length || 0,
       pages: cms?.pages?.length || 0,
-      media: cms?.media?.length || 0
+      media: cms?.media?.length || 0,
+      insights: (summary?.totals?.contactSubmissions || 0) + (summary?.totals?.newsletterSubscribers || 0)
     }),
-    [cms]
+    [cms, summary?.totals?.contactSubmissions, summary?.totals?.newsletterSubscribers]
   );
 
   const draftPagesCount = useMemo(() => {
@@ -409,6 +415,30 @@ export default function DashboardPage() {
 
     return rows.slice(0, 6);
   }, [cms?.projects, cms?.news, cms?.pages, isArabic, lang]);
+
+  const publishingQueue = useMemo(() => {
+    const pageItems = (Array.isArray(cms?.pages) ? cms.pages : []).map((item) => ({
+      id: `page-${item.id}`,
+      type: isArabic ? "صفحة" : "Page",
+      title: previewLocalized(item.title, lang),
+      date: item.updatedAt || item.publishedAt || "",
+      status: String(item.status || "published").toLowerCase() === "draft"
+        ? (isArabic ? "مسودة" : "Draft")
+        : (isArabic ? "منشورة" : "Published")
+    }));
+
+    const newsItems = (Array.isArray(cms?.news) ? cms.news : []).map((item) => ({
+      id: `news-${item.id}`,
+      type: isArabic ? "خبر" : "News",
+      title: previewLocalized(item.title, lang),
+      date: item.publishedAt || "",
+      status: isArabic ? "منشور" : "Published"
+    }));
+
+    return [...pageItems, ...newsItems]
+      .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))
+      .slice(0, 10);
+  }, [cms?.news, cms?.pages, isArabic, lang]);
 
   const filteredProjects = useMemo(() => {
     const items = Array.isArray(cms?.projects) ? cms.projects : [];
@@ -1018,7 +1048,7 @@ export default function DashboardPage() {
                 <h3>{isArabic ? "القائمة" : "NAVIGATION"}</h3>
                 <div className="admin-side-nav">
                   {tabs.map((tab) => {
-                    const showCount = tab === "projects" || tab === "news" || tab === "pages" || tab === "media";
+                    const showCount = ["publishing", "projects", "news", "pages", "media", "insights"].includes(tab);
                     return (
                       <button
                         key={tab}
@@ -1162,6 +1192,104 @@ export default function DashboardPage() {
                       </article>
                     </div>
                   </>
+                ) : null}
+
+                {activeTab === "publishing" ? (
+                  <div className="admin-command-grid">
+                    <article className="surface-card admin-command-card">
+                      <div className="admin-command-head">
+                        <h3>{isArabic ? "جدول النشر" : "Publishing Queue"}</h3>
+                        <span>{isArabic ? "آخر العناصر" : "Latest entries"}</span>
+                      </div>
+                      <div className="admin-activity-list">
+                        {publishingQueue.length ? (
+                          publishingQueue.map((entry) => (
+                            <div key={entry.id} className="admin-activity-item">
+                              <em>{entry.type} • {entry.status}</em>
+                              <strong>{entry.title || (isArabic ? "بدون عنوان" : "Untitled")}</strong>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="admin-empty-state">{isArabic ? "لا توجد عناصر للنشر حالياً." : "No publishing entries yet."}</p>
+                        )}
+                      </div>
+                    </article>
+
+                    <article className="surface-card admin-command-card">
+                      <div className="admin-command-head">
+                        <h3>{isArabic ? "عمليات النشر" : "Publishing Actions"}</h3>
+                        <span>{isArabic ? "اختصارات" : "Shortcuts"}</span>
+                      </div>
+                      <div className="admin-quick-actions">
+                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("news")}>
+                          <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
+                          {isArabic ? "إنشاء خبر" : "Create News"}
+                        </button>
+                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("pages")}>
+                          <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
+                          {isArabic ? "إنشاء صفحة" : "Create Page"}
+                        </button>
+                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("media")}>
+                          <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
+                          {isArabic ? "رفع وسائط" : "Upload Media"}
+                        </button>
+                      </div>
+                      <ul className="admin-check-list">
+                        <li>
+                          <span>{isArabic ? "الصفحات المسودة" : "Draft pages"}</span>
+                          <strong>{draftPagesCount}</strong>
+                        </li>
+                        <li>
+                          <span>{isArabic ? "عناصر ناقصة Slug" : "Missing slug"}</span>
+                          <strong>{missingSlugCount}</strong>
+                        </li>
+                      </ul>
+                    </article>
+                  </div>
+                ) : null}
+
+                {activeTab === "insights" ? (
+                  <div className="admin-command-grid">
+                    <article className="surface-card admin-command-card">
+                      <div className="admin-command-head">
+                        <h3>{isArabic ? "مؤشرات الأداء التشغيلي" : "Operational Insights"}</h3>
+                        <span>{isArabic ? "قراءة سريعة" : "Quick read"}</span>
+                      </div>
+                      <div className="cards-grid grid-3 admin-overview-grid">
+                        {[
+                          { label: isArabic ? "إجمالي المحتوى" : "Total Content", value: (cms.projects?.length || 0) + (cms.news?.length || 0) + (cms.pages?.length || 0) },
+                          { label: isArabic ? "التفاعلات" : "Interactions", value: (summary?.totals?.contactSubmissions || 0) + (summary?.totals?.newsletterSubscribers || 0) },
+                          { label: isArabic ? "وسائط" : "Media", value: cms.media?.length || 0 }
+                        ].map((kpi) => (
+                          <article className="surface-card admin-kpi-card" key={kpi.label}>
+                            <h3>{kpi.label}</h3>
+                            <p className="admin-kpi-value">{kpi.value}</p>
+                          </article>
+                        ))}
+                      </div>
+                    </article>
+
+                    <article className="surface-card admin-command-card admin-command-activity">
+                      <div className="admin-command-head">
+                        <h3>{isArabic ? "تشخيص الجودة" : "Quality Diagnostics"}</h3>
+                        <span>{isArabic ? "نقاط التحسين" : "Improvement points"}</span>
+                      </div>
+                      <ul className="admin-check-list">
+                        <li>
+                          <span>{isArabic ? "عناصر تحتاج Slug" : "Entries requiring slug"}</span>
+                          <strong>{missingSlugCount}</strong>
+                        </li>
+                        <li>
+                          <span>{isArabic ? "صفحات غير منشورة" : "Unpublished pages"}</span>
+                          <strong>{draftPagesCount}</strong>
+                        </li>
+                        <li>
+                          <span>{isArabic ? "آخر حفظ تلقائي" : "Last autosave"}</span>
+                          <strong>{autoSaveLabel || "--:--"}</strong>
+                        </li>
+                      </ul>
+                    </article>
+                  </div>
                 ) : null}
 
                 {activeTab === "settings" && settingsForm ? (
