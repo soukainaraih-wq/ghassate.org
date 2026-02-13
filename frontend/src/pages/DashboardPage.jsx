@@ -177,6 +177,25 @@ function previewLocalized(map, lang) {
   return map?.[lang] || map?.ar || map?.zgh || map?.en || "";
 }
 
+function getArabicValue(value) {
+  if (Array.isArray(value)) {
+    return value.join("\n");
+  }
+  if (value && typeof value === "object") {
+    const ar = value.ar;
+    return Array.isArray(ar) ? ar.join("\n") : String(ar || "");
+  }
+  return String(value || "");
+}
+
+function estimateReadingMinutes(text) {
+  const words = String(text || "").trim().split(/\s+/).filter(Boolean).length;
+  if (!words) {
+    return 0;
+  }
+  return Math.max(1, Math.ceil(words / 180));
+}
+
 function emptyProject() {
   return {
     slug: "",
@@ -439,6 +458,109 @@ export default function DashboardPage() {
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))
       .slice(0, 10);
   }, [cms?.news, cms?.pages, isArabic, lang]);
+
+  const newsEditorMetrics = useMemo(() => {
+    const title = getArabicValue(newsForm.title);
+    const excerpt = getArabicValue(newsForm.excerpt);
+    const content = getArabicValue(newsForm.content);
+    const keyPoints = getArabicValue(newsForm.keyPoints)
+      .split(/\r\n|\r|\n/)
+      .map((x) => x.trim())
+      .filter(Boolean);
+
+    const words = content.split(/\s+/).filter(Boolean).length;
+    const reading = estimateReadingMinutes(content);
+    const score = [
+      title.length >= 12,
+      excerpt.length >= 40,
+      words >= 80,
+      keyPoints.length >= 2
+    ].filter(Boolean).length * 25;
+
+    return { title, excerpt, content, keyPoints, words, reading, score };
+  }, [newsForm]);
+
+  const pageEditorMetrics = useMemo(() => {
+    const title = getArabicValue(pageForm.title);
+    const excerpt = getArabicValue(pageForm.excerpt);
+    const content = getArabicValue(pageForm.content);
+    const words = content.split(/\s+/).filter(Boolean).length;
+    const reading = estimateReadingMinutes(content);
+    const score = [
+      title.length >= 12,
+      excerpt.length >= 40,
+      words >= 120,
+      String(pageForm.slug || "").trim().length >= 3
+    ].filter(Boolean).length * 25;
+
+    return { title, excerpt, content, words, reading, score };
+  }, [pageForm]);
+
+  function generateSmartNewsDraft() {
+    const title = getArabicValue(newsForm.title).trim();
+    if (!title) {
+      setError(isArabic ? "أدخل عنوان الخبر أولاً لتوليد مسودة ذكية." : "Add a title first to generate a smart draft.");
+      return;
+    }
+
+    const base = title.replace(/\s+/g, " ").trim();
+    setNewsForm((prev) => ({
+      ...prev,
+      excerpt: {
+        ...prev.excerpt,
+        ar: prev.excerpt?.ar || `يستعرض هذا الخبر ${base} مع أهم النتائج والتأثير المتوقع على المستفيدين.`
+      },
+      content: {
+        ...prev.content,
+        ar:
+          prev.content?.ar ||
+          [
+            `انطلقت المؤسسة في تنفيذ ${base} ضمن خطة تطوير محلية مركّزة على الأثر القابل للقياس.`,
+            "تم تحديد مراحل التنفيذ، الجهات المتدخلة، ومؤشرات النجاح لضمان جودة المخرجات.",
+            "سيتم نشر التحديثات الدورية بشكل مستمر لضمان الشفافية وتتبع التقدم."
+          ].join("\n")
+      },
+      keyPoints: {
+        ...prev.keyPoints,
+        ar:
+          prev.keyPoints?.ar ||
+          [
+            "تحديد نطاق التنفيذ والزمن",
+            "متابعة مؤشرات الأداء بشكل دوري",
+            "تواصل مستمر مع المجتمع المحلي"
+          ].join("\n")
+      }
+    }));
+    pushToast(isArabic ? "تم توليد مسودة خبر ذكية." : "Smart news draft generated.");
+  }
+
+  function generateSmartPageDraft() {
+    const title = getArabicValue(pageForm.title).trim();
+    if (!title) {
+      setError(isArabic ? "أدخل عنوان الصفحة أولاً لتوليد مسودة ذكية." : "Add a page title first to generate a smart draft.");
+      return;
+    }
+
+    const base = title.replace(/\s+/g, " ").trim();
+    setPageForm((prev) => ({
+      ...prev,
+      excerpt: {
+        ...prev.excerpt,
+        ar: prev.excerpt?.ar || `صفحة توثيقية حول ${base} تشمل المعلومات الأساسية، الأهداف، وآلية التنفيذ.`
+      },
+      content: {
+        ...prev.content,
+        ar:
+          prev.content?.ar ||
+          [
+            `${base} يمثل جزءاً من الرؤية المؤسسية لتعزيز التنمية المحلية المستدامة.`,
+            "توضح هذه الصفحة المعطيات الأساسية، الفئة المستفيدة، وخطة التنفيذ الزمنية.",
+            "نعتمد على مؤشرات دقيقة لقياس الأثر وننشر التحديثات بشكل دوري."
+          ].join("\n")
+      }
+    }));
+    pushToast(isArabic ? "تم توليد مسودة صفحة ذكية." : "Smart page draft generated.");
+  }
 
   const filteredProjects = useMemo(() => {
     const items = Array.isArray(cms?.projects) ? cms.projects : [];
@@ -1669,6 +1791,32 @@ export default function DashboardPage() {
                       <LocalizedEditor label={isArabic ? "المحتوى (سطر لكل فقرة)" : "Content (line by line)"} value={newsForm.content} multiline onChange={(c, v) => setNewsForm((p) => ({ ...p, content: { ...p.content, [c]: v } }))} />
                       <LocalizedEditor label={isArabic ? "أهم النقاط (كل سطر نقطة)" : "Key Points (line by line)"} value={newsForm.keyPoints} multiline onChange={(c, v) => setNewsForm((p) => ({ ...p, keyPoints: { ...p.keyPoints, [c]: v } }))} />
                       <LocalizedEditor label={isArabic ? "الكاتب/الوحدة" : "Author/Unit"} value={newsForm.author} onChange={(c, v) => setNewsForm((p) => ({ ...p, author: { ...p.author, [c]: v } }))} />
+                      <div className="editor-intelligence">
+                        <div className="editor-metrics-grid">
+                          <article className="editor-metric-card">
+                            <span>{isArabic ? "جودة الخبر" : "News Quality"}</span>
+                            <strong>{newsEditorMetrics.score}%</strong>
+                          </article>
+                          <article className="editor-metric-card">
+                            <span>{isArabic ? "عدد الكلمات" : "Word Count"}</span>
+                            <strong>{newsEditorMetrics.words}</strong>
+                          </article>
+                          <article className="editor-metric-card">
+                            <span>{isArabic ? "زمن القراءة" : "Reading Time"}</span>
+                            <strong>{newsEditorMetrics.reading} {isArabic ? "د" : "min"}</strong>
+                          </article>
+                        </div>
+                        <div className="editor-smart-row">
+                          <button type="button" className="btn btn-outline-ink" onClick={generateSmartNewsDraft}>
+                            {isArabic ? "توليد مسودة ذكية" : "Generate Smart Draft"}
+                          </button>
+                        </div>
+                        <div className="editor-preview-card">
+                          <h4>{isArabic ? "معاينة مباشرة" : "Live Preview"}</h4>
+                          <h5>{newsEditorMetrics.title || (isArabic ? "عنوان الخبر سيظهر هنا" : "News title appears here")}</h5>
+                          <p>{newsEditorMetrics.excerpt || (isArabic ? "ملخص الخبر سيظهر هنا" : "News excerpt appears here")}</p>
+                        </div>
+                      </div>
                       <div className="admin-form-actions">
                         <button className="btn btn-primary" type="submit" disabled={busy === "news"}>
                           {busy === "news" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ الخبر" : "Save News"}
@@ -1780,6 +1928,32 @@ export default function DashboardPage() {
                         multiline
                         onChange={(c, v) => setPageForm((p) => ({ ...p, content: { ...p.content, [c]: v } }))}
                       />
+                      <div className="editor-intelligence">
+                        <div className="editor-metrics-grid">
+                          <article className="editor-metric-card">
+                            <span>{isArabic ? "جودة الصفحة" : "Page Quality"}</span>
+                            <strong>{pageEditorMetrics.score}%</strong>
+                          </article>
+                          <article className="editor-metric-card">
+                            <span>{isArabic ? "عدد الكلمات" : "Word Count"}</span>
+                            <strong>{pageEditorMetrics.words}</strong>
+                          </article>
+                          <article className="editor-metric-card">
+                            <span>{isArabic ? "زمن القراءة" : "Reading Time"}</span>
+                            <strong>{pageEditorMetrics.reading} {isArabic ? "د" : "min"}</strong>
+                          </article>
+                        </div>
+                        <div className="editor-smart-row">
+                          <button type="button" className="btn btn-outline-ink" onClick={generateSmartPageDraft}>
+                            {isArabic ? "توليد مسودة ذكية" : "Generate Smart Draft"}
+                          </button>
+                        </div>
+                        <div className="editor-preview-card">
+                          <h4>{isArabic ? "معاينة مباشرة" : "Live Preview"}</h4>
+                          <h5>{pageEditorMetrics.title || (isArabic ? "عنوان الصفحة سيظهر هنا" : "Page title appears here")}</h5>
+                          <p>{pageEditorMetrics.excerpt || (isArabic ? "ملخص الصفحة سيظهر هنا" : "Page excerpt appears here")}</p>
+                        </div>
+                      </div>
                       <div className="admin-form-actions">
                         <button
                           className="btn btn-outline-ink"
