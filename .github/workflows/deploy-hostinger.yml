@@ -37,11 +37,13 @@ jobs:
         run: npm --prefix frontend run build
 
       - name: Setup SSH Key
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p ${{ secrets.SFTP_PORT }} ${{ secrets.SFTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -p ${{ secrets.SFTP_PORT }} ${{ secrets.SFTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Upload Frontend Dist
         env:
@@ -51,7 +53,7 @@ jobs:
           SFTP_REMOTE_FRONTEND_PATH: ${{ secrets.SFTP_REMOTE_FRONTEND_PATH }}
         run: |
           rsync -avz --delete \
-            -e "ssh -p $SFTP_PORT -i ~/.ssh/id_ed25519" \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" \
             frontend/dist/ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_FRONTEND_PATH/"
 
       - name: Upload Backend API Code (Preserve storage data)
@@ -63,7 +65,7 @@ jobs:
         run: |
           rsync -avz \
             --exclude 'storage/' \
-            -e "ssh -p $SFTP_PORT -i ~/.ssh/id_ed25519" \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" \
             backend-php/api/ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_API_PATH/"
 
       - name: Cleanup SSH Key
