@@ -281,6 +281,17 @@ export default function DashboardPage() {
   const [pageStatusFilter, setPageStatusFilter] = useState("all");
   const [mediaQuery, setMediaQuery] = useState("");
   const [mediaTypeFilter, setMediaTypeFilter] = useState("all");
+  const [newsPlacement, setNewsPlacement] = useState("home");
+  const [newsAiMode, setNewsAiMode] = useState("ai");
+  const [pagePlacement, setPagePlacement] = useState("home");
+  const [pageAiMode, setPageAiMode] = useState("ai");
+  const [quickKind, setQuickKind] = useState("news");
+  const [quickTitle, setQuickTitle] = useState("");
+  const [quickSummary, setQuickSummary] = useState("");
+  const [quickBody, setQuickBody] = useState("");
+  const [quickDestination, setQuickDestination] = useState("home");
+  const [quickAiMode, setQuickAiMode] = useState("ai");
+  const [quickPublishMode, setQuickPublishMode] = useState("publish");
   const [toasts, setToasts] = useState([]);
   const [autoSaveLabel, setAutoSaveLabel] = useState("");
   const autosaveTimersRef = useRef({});
@@ -459,6 +470,30 @@ export default function DashboardPage() {
       .slice(0, 10);
   }, [cms?.news, cms?.pages, isArabic, lang]);
 
+  const publishingDestinations = useMemo(() => {
+    const base = [
+      { value: "home", label: isArabic ? "الصفحة الرئيسية" : "Homepage" },
+      { value: "news", label: isArabic ? "قسم الأخبار" : "News Section" },
+      { value: "projects", label: isArabic ? "قسم المشاريع" : "Projects Section" }
+    ];
+    const pageEntries = (Array.isArray(cms?.pages) ? cms.pages : [])
+      .slice(0, 30)
+      .map((item) => ({
+        value: `page:${item.slug || item.id}`,
+        label: previewLocalized(item.title, lang) || (isArabic ? "صفحة بدون عنوان" : "Untitled page")
+      }));
+    return [...base, ...pageEntries];
+  }, [cms?.pages, isArabic, lang]);
+
+  const quickContentTabs = useMemo(
+    () => [
+      { key: "publishing", label: isArabic ? "مسار النشر" : "Publishing Flow" },
+      { key: "news", label: isArabic ? "منشور إخباري" : "News Post" },
+      { key: "pages", label: isArabic ? "صفحة محتوى" : "Content Page" }
+    ],
+    [isArabic]
+  );
+
   const newsEditorMetrics = useMemo(() => {
     const title = getArabicValue(newsForm.title);
     const excerpt = getArabicValue(newsForm.excerpt);
@@ -490,11 +525,11 @@ export default function DashboardPage() {
       title.length >= 12,
       excerpt.length >= 40,
       words >= 120,
-      String(pageForm.slug || "").trim().length >= 3
+      String(pagePlacement || "").trim().length >= 2
     ].filter(Boolean).length * 25;
 
     return { title, excerpt, content, words, reading, score };
-  }, [pageForm]);
+  }, [pageForm, pagePlacement]);
 
   function generateSmartNewsDraft() {
     const title = getArabicValue(newsForm.title).trim();
@@ -504,11 +539,12 @@ export default function DashboardPage() {
     }
 
     const base = title.replace(/\s+/g, " ").trim();
+    const destination = publishingDestinations.find((entry) => entry.value === newsPlacement)?.label || (isArabic ? "الصفحة الرئيسية" : "Homepage");
     setNewsForm((prev) => ({
       ...prev,
       excerpt: {
         ...prev.excerpt,
-        ar: prev.excerpt?.ar || `يستعرض هذا الخبر ${base} مع أهم النتائج والتأثير المتوقع على المستفيدين.`
+        ar: prev.excerpt?.ar || `يستعرض هذا الخبر ${base} مع أهم النتائج والتأثير المتوقع على المستفيدين ضمن ${destination}.`
       },
       content: {
         ...prev.content,
@@ -525,10 +561,14 @@ export default function DashboardPage() {
         ar:
           prev.keyPoints?.ar ||
           [
-            "تحديد نطاق التنفيذ والزمن",
+            `وجهة النشر: ${destination}`,
             "متابعة مؤشرات الأداء بشكل دوري",
             "تواصل مستمر مع المجتمع المحلي"
           ].join("\n")
+      },
+      author: {
+        ...prev.author,
+        ar: prev.author?.ar || (newsAiMode === "ai" ? "تحرير ذكي بمراجعة بشرية" : "تحرير يدوي")
       }
     }));
     pushToast(isArabic ? "تم توليد مسودة خبر ذكية." : "Smart news draft generated.");
@@ -542,11 +582,12 @@ export default function DashboardPage() {
     }
 
     const base = title.replace(/\s+/g, " ").trim();
+    const destination = publishingDestinations.find((entry) => entry.value === pagePlacement)?.label || (isArabic ? "الصفحة الرئيسية" : "Homepage");
     setPageForm((prev) => ({
       ...prev,
       excerpt: {
         ...prev.excerpt,
-        ar: prev.excerpt?.ar || `صفحة توثيقية حول ${base} تشمل المعلومات الأساسية، الأهداف، وآلية التنفيذ.`
+        ar: prev.excerpt?.ar || `صفحة توثيقية حول ${base} تشمل المعلومات الأساسية، الأهداف، وآلية التنفيذ ضمن ${destination}.`
       },
       content: {
         ...prev.content,
@@ -555,11 +596,82 @@ export default function DashboardPage() {
           [
             `${base} يمثل جزءاً من الرؤية المؤسسية لتعزيز التنمية المحلية المستدامة.`,
             "توضح هذه الصفحة المعطيات الأساسية، الفئة المستفيدة، وخطة التنفيذ الزمنية.",
-            "نعتمد على مؤشرات دقيقة لقياس الأثر وننشر التحديثات بشكل دوري."
+            `وضع التحرير: ${pageAiMode === "ai" ? "صياغة ذكية" : "صياغة يدوية"}.`,
+            `تم ضبط وجهة النشر على: ${destination}.`
           ].join("\n")
       }
     }));
     pushToast(isArabic ? "تم توليد مسودة صفحة ذكية." : "Smart page draft generated.");
+  }
+
+  async function publishQuickContent() {
+    const title = quickTitle.trim();
+    const summary = quickSummary.trim();
+    let body = quickBody.trim();
+
+    if (!title) {
+      setError(isArabic ? "أدخل عنوان المحتوى أولاً." : "Add a content title first.");
+      return;
+    }
+
+    const destination = publishingDestinations.find((entry) => entry.value === quickDestination)?.label || (isArabic ? "الصفحة الرئيسية" : "Homepage");
+    const finalSummary = summary || (isArabic ? `محتوى جديد بعنوان ${title} موجّه للنشر ضمن ${destination}.` : `${title} prepared for publication in ${destination}.`);
+
+    if (!body && quickAiMode === "ai") {
+      body = isArabic
+        ? [
+            `يقدم هذا المحتوى ${title} بصياغة واضحة ومباشرة.`,
+            `تم إعداد المادة للنشر في ${destination} مع مراعاة الرسائل الأساسية للمؤسسة.`,
+            "يمكن تعديل النص بحرية قبل النشر أو اعتماده كما هو."
+          ].join("\n")
+        : [
+            `${title} is prepared in a clear and concise format.`,
+            `The content is drafted for ${destination} with institutional messaging in mind.`,
+            "You can freely edit this text before publishing or keep it as-is."
+          ].join("\n");
+    }
+
+    if (!body) {
+      setError(isArabic ? "أدخل نص المحتوى أو فعّل صياغة الذكاء الاصطناعي." : "Add content text or enable AI writing mode.");
+      return;
+    }
+
+    setBusy("quick-publish");
+    setError("");
+    setNotice("");
+    try {
+      if (quickKind === "news") {
+        const payload = {
+          title: await buildLocalizedFromArabic(title),
+          excerpt: await buildLocalizedFromArabic(finalSummary),
+          content: await buildLocalizedFromArabic(body),
+          keyPoints: await buildLocalizedFromArabic(`${isArabic ? "وجهة النشر" : "Publish destination"}: ${destination}`),
+          author: await buildLocalizedFromArabic(quickAiMode === "ai" ? (isArabic ? "تحرير ذكي بمراجعة بشرية" : "AI-assisted editorial") : (isArabic ? "تحرير يدوي" : "Manual editorial")),
+          publishedAt: new Date().toISOString().slice(0, 10)
+        };
+        await createAdminNews(token, payload);
+      } else {
+        const payload = {
+          title: await buildLocalizedFromArabic(title),
+          excerpt: await buildLocalizedFromArabic(finalSummary),
+          content: await buildLocalizedFromArabic(body),
+          status: quickPublishMode === "draft" ? "draft" : "published",
+          publishedAt: new Date().toISOString().slice(0, 10),
+          updatedAt: new Date().toISOString().slice(0, 10)
+        };
+        await createAdminPage(token, payload);
+      }
+
+      await loadCms(token);
+      setQuickTitle("");
+      setQuickSummary("");
+      setQuickBody("");
+      pushToast(isArabic ? "تم نشر المحتوى عبر المسار السريع." : "Content published via quick flow.");
+    } catch (requestError) {
+      setError(requestError.message || (isArabic ? "فشل النشر السريع." : "Quick publish failed."));
+    } finally {
+      setBusy("");
+    }
   }
 
   const filteredProjects = useMemo(() => {
@@ -748,12 +860,16 @@ export default function DashboardPage() {
   function resetNewsForm() {
     setEditingNewsId(null);
     setNewsForm(emptyNews());
+    setNewsPlacement("home");
+    setNewsAiMode("ai");
     clearDraft("news");
   }
 
   function resetPageForm() {
     setEditingPageId(null);
     setPageForm(emptyPage());
+    setPagePlacement("home");
+    setPageAiMode("ai");
     clearDraft("page");
   }
 
@@ -924,8 +1040,8 @@ export default function DashboardPage() {
         title: await buildLocalizedFromArabic(newsForm.title?.ar || ""),
         excerpt: await buildLocalizedFromArabic(newsForm.excerpt?.ar || ""),
         content: await buildLocalizedFromArabic(newsForm.content?.ar || ""),
-        keyPoints: await buildLocalizedFromArabic(newsForm.keyPoints?.ar || ""),
-        author: await buildLocalizedFromArabic(newsForm.author?.ar || ""),
+        keyPoints: await buildLocalizedFromArabic(newsForm.keyPoints?.ar || `${isArabic ? "وجهة النشر" : "Publish destination"}: ${publishingDestinations.find((entry) => entry.value === newsPlacement)?.label || (isArabic ? "الصفحة الرئيسية" : "Homepage")}`),
+        author: await buildLocalizedFromArabic(newsForm.author?.ar || (newsAiMode === "ai" ? (isArabic ? "تحرير ذكي بمراجعة بشرية" : "AI-assisted editorial") : (isArabic ? "تحرير يدوي" : "Manual editorial"))),
         publishedAt: newsForm.publishedAt || new Date().toISOString().slice(0, 10)
       };
       if (editingNewsId) {
@@ -980,7 +1096,7 @@ export default function DashboardPage() {
           ? "draft"
           : pageSubmitMode === "publish"
             ? "published"
-            : String(pageForm.status || "published").toLowerCase(),
+            : "published",
         publishedAt: pageForm.publishedAt || new Date().toISOString().slice(0, 10),
         updatedAt: new Date().toISOString().slice(0, 10)
       };
@@ -1167,7 +1283,10 @@ export default function DashboardPage() {
 
             <div className="admin-layout">
               <aside className="admin-sidebar">
-                <h3>{isArabic ? "القائمة" : "NAVIGATION"}</h3>
+                <div className="admin-sidebar-top">
+                  <span>{isArabic ? "لوحة التحكم" : "Dashboard"}</span>
+                  <small>{isArabic ? "تنقل سريع" : "Quick navigation"}</small>
+                </div>
                 <div className="admin-side-nav">
                   {tabs.map((tab) => {
                     const showCount = ["publishing", "projects", "news", "pages", "media", "insights"].includes(tab);
@@ -1190,6 +1309,19 @@ export default function DashboardPage() {
                 {notice ? <p className="form-message success">{notice}</p> : null}
                 {error ? <p className="form-message error">{error}</p> : null}
                 {loading ? <p className="form-message loading">{content.common.loading}</p> : null}
+
+                <div className="admin-section-tabs">
+                  {quickContentTabs.map((entry) => (
+                    <button
+                      key={entry.key}
+                      type="button"
+                      className={`admin-section-tab ${activeTab === entry.key ? "is-active" : ""}`}
+                      onClick={() => setActiveTab(entry.key)}
+                    >
+                      {entry.label}
+                    </button>
+                  ))}
+                </div>
 
                 {!loading && cms ? (
                   <>
@@ -1370,41 +1502,91 @@ export default function DashboardPage() {
 
                     <article className="surface-card admin-command-card">
                       <div className="admin-command-head">
-                        <h3>{isArabic ? "لوحة قرارات النشر" : "Publishing Decision Board"}</h3>
-                        <span>{isArabic ? "تنفيذ سريع" : "Quick execution"}</span>
+                        <h3>{isArabic ? "الناشر السريع" : "Quick Publisher"}</h3>
+                        <span>{isArabic ? "نشر مباشر بدون حقول معقدة" : "Direct publishing without complex forms"}</span>
                       </div>
-                      <div className="admin-quick-actions">
-                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("news")}>
-                          <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
-                          {isArabic ? "إنشاء خبر" : "Create News"}
+                      <div className="quick-publish-mode">
+                        <button
+                          type="button"
+                          className={`admin-section-tab ${quickKind === "news" ? "is-active" : ""}`}
+                          onClick={() => setQuickKind("news")}
+                        >
+                          {isArabic ? "منشور إخباري" : "News Post"}
                         </button>
-                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("pages")}>
-                          <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
-                          {isArabic ? "إنشاء صفحة" : "Create Page"}
-                        </button>
-                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("media")}>
-                          <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
-                          {isArabic ? "رفع وسائط" : "Upload Media"}
-                        </button>
-                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("insights")}>
-                          <svg viewBox="0 0 24 24"><path d="M4 19h16M7 16V8m5 8V4m5 12v-6" /></svg>
-                          {isArabic ? "مراجعة الجودة" : "Quality Review"}
+                        <button
+                          type="button"
+                          className={`admin-section-tab ${quickKind === "pages" ? "is-active" : ""}`}
+                          onClick={() => setQuickKind("pages")}
+                        >
+                          {isArabic ? "صفحة" : "Page"}
                         </button>
                       </div>
-                      <ul className="admin-check-list">
-                        <li>
-                          <span>{isArabic ? "الصفحات المسودة" : "Draft pages"}</span>
-                          <strong>{draftPagesCount}</strong>
-                        </li>
-                        <li>
-                          <span>{isArabic ? "عناصر ناقصة Slug" : "Missing slug"}</span>
-                          <strong>{missingSlugCount}</strong>
-                        </li>
-                        <li>
-                          <span>{isArabic ? "آخر حفظ تلقائي" : "Last autosave"}</span>
-                          <strong>{autoSaveLabel || "--:--"}</strong>
-                        </li>
-                      </ul>
+
+                      <div className="admin-form quick-publish-form">
+                        <label>
+                          <span>{isArabic ? "العنوان" : "Title"}</span>
+                          <input
+                            value={quickTitle}
+                            onChange={(event) => setQuickTitle(event.target.value)}
+                            placeholder={isArabic ? "اكتب الفكرة الأساسية للنشر" : "Write the main publishing idea"}
+                          />
+                        </label>
+                        <label>
+                          <span>{isArabic ? "ملخص قصير (اختياري)" : "Short summary (optional)"}</span>
+                          <textarea
+                            rows={2}
+                            value={quickSummary}
+                            onChange={(event) => setQuickSummary(event.target.value)}
+                            placeholder={isArabic ? "اتركه فارغاً ليتم توليده تلقائياً" : "Leave empty for auto-generated summary"}
+                          />
+                        </label>
+                        <label>
+                          <span>{isArabic ? "نص المحتوى (اختياري عند تفعيل AI)" : "Content text (optional with AI mode)"}</span>
+                          <textarea
+                            rows={5}
+                            value={quickBody}
+                            onChange={(event) => setQuickBody(event.target.value)}
+                            placeholder={isArabic ? "أضف النص أو دع الذكاء الاصطناعي يقترحه" : "Add text or let AI propose it"}
+                          />
+                        </label>
+                        <div className="quick-publish-decisions">
+                          <label>
+                            <span>{isArabic ? "مكان النشر" : "Publish destination"}</span>
+                            <select value={quickDestination} onChange={(event) => setQuickDestination(event.target.value)}>
+                              {publishingDestinations.map((option) => (
+                                <option key={option.value} value={option.value}>{option.label}</option>
+                              ))}
+                            </select>
+                          </label>
+                          <label>
+                            <span>{isArabic ? "وضع الكتابة" : "Writing mode"}</span>
+                            <select value={quickAiMode} onChange={(event) => setQuickAiMode(event.target.value)}>
+                              <option value="ai">{isArabic ? "صياغة ذكية + مراجعة" : "AI-assisted + review"}</option>
+                              <option value="manual">{isArabic ? "صياغة يدوية" : "Manual writing"}</option>
+                            </select>
+                          </label>
+                          {quickKind === "pages" ? (
+                            <label>
+                              <span>{isArabic ? "حالة النشر" : "Publish state"}</span>
+                              <select value={quickPublishMode} onChange={(event) => setQuickPublishMode(event.target.value)}>
+                                <option value="publish">{isArabic ? "نشر الآن" : "Publish now"}</option>
+                                <option value="draft">{isArabic ? "حفظ كمسودة" : "Save draft"}</option>
+                              </select>
+                            </label>
+                          ) : null}
+                        </div>
+
+                        <div className="admin-form-actions">
+                          <button className="btn btn-primary" type="button" disabled={busy === "quick-publish"} onClick={publishQuickContent}>
+                            {busy === "quick-publish"
+                              ? (isArabic ? "جارٍ التنفيذ..." : "Processing...")
+                              : (isArabic ? "نشر مباشر" : "Publish Directly")}
+                          </button>
+                          <button className="btn btn-outline-ink" type="button" onClick={() => setActiveTab(quickKind === "news" ? "news" : "pages")}>
+                            {isArabic ? "فتح وضع التحرير" : "Open editor mode"}
+                          </button>
+                        </div>
+                      </div>
                     </article>
                   </div>
                 ) : null}
@@ -1778,19 +1960,26 @@ export default function DashboardPage() {
                           </button>
                         ) : null}
                       </div>
-                      <label>
-                        <span>Slug</span>
-                        <input value={newsForm.slug} onChange={(e) => setNewsForm((p) => ({ ...p, slug: e.target.value }))} />
-                      </label>
-                      <label>
-                        <span>{isArabic ? "تاريخ النشر" : "Published Date"}</span>
-                        <input type="date" value={newsForm.publishedAt || ""} onChange={(e) => setNewsForm((p) => ({ ...p, publishedAt: e.target.value }))} />
-                      </label>
                       <LocalizedEditor label={isArabic ? "العنوان" : "Title"} value={newsForm.title} onChange={(c, v) => setNewsForm((p) => ({ ...p, title: { ...p.title, [c]: v } }))} />
                       <LocalizedEditor label={isArabic ? "الملخص" : "Excerpt"} value={newsForm.excerpt} multiline onChange={(c, v) => setNewsForm((p) => ({ ...p, excerpt: { ...p.excerpt, [c]: v } }))} />
                       <LocalizedEditor label={isArabic ? "المحتوى (سطر لكل فقرة)" : "Content (line by line)"} value={newsForm.content} multiline onChange={(c, v) => setNewsForm((p) => ({ ...p, content: { ...p.content, [c]: v } }))} />
-                      <LocalizedEditor label={isArabic ? "أهم النقاط (كل سطر نقطة)" : "Key Points (line by line)"} value={newsForm.keyPoints} multiline onChange={(c, v) => setNewsForm((p) => ({ ...p, keyPoints: { ...p.keyPoints, [c]: v } }))} />
-                      <LocalizedEditor label={isArabic ? "الكاتب/الوحدة" : "Author/Unit"} value={newsForm.author} onChange={(c, v) => setNewsForm((p) => ({ ...p, author: { ...p.author, [c]: v } }))} />
+                      <div className="quick-publish-decisions">
+                        <label>
+                          <span>{isArabic ? "مكان النشر" : "Publish destination"}</span>
+                          <select value={newsPlacement} onChange={(event) => setNewsPlacement(event.target.value)}>
+                            {publishingDestinations.map((option) => (
+                              <option key={option.value} value={option.value}>{option.label}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          <span>{isArabic ? "طريقة الكتابة" : "Writing mode"}</span>
+                          <select value={newsAiMode} onChange={(event) => setNewsAiMode(event.target.value)}>
+                            <option value="ai">{isArabic ? "صياغة ذكية + مراجعة" : "AI-assisted + review"}</option>
+                            <option value="manual">{isArabic ? "صياغة يدوية" : "Manual writing"}</option>
+                          </select>
+                        </label>
+                      </div>
                       <div className="editor-intelligence">
                         <div className="editor-metrics-grid">
                           <article className="editor-metric-card">
@@ -1892,25 +2081,6 @@ export default function DashboardPage() {
                           </button>
                         ) : null}
                       </div>
-                      <label>
-                        <span>Slug</span>
-                        <input value={pageForm.slug} onChange={(e) => setPageForm((p) => ({ ...p, slug: e.target.value }))} />
-                      </label>
-                      <label>
-                        <span>{isArabic ? "الحالة" : "Status"}</span>
-                        <select value={pageForm.status} onChange={(e) => setPageForm((p) => ({ ...p, status: e.target.value }))}>
-                          <option value="published">{isArabic ? "منشورة" : "Published"}</option>
-                          <option value="draft">{isArabic ? "مسودة" : "Draft"}</option>
-                        </select>
-                      </label>
-                      <label>
-                        <span>{isArabic ? "تاريخ النشر" : "Published Date"}</span>
-                        <input
-                          type="date"
-                          value={pageForm.publishedAt || ""}
-                          onChange={(e) => setPageForm((p) => ({ ...p, publishedAt: e.target.value }))}
-                        />
-                      </label>
                       <LocalizedEditor
                         label={isArabic ? "عنوان الصفحة" : "Page Title"}
                         value={pageForm.title}
@@ -1928,6 +2098,23 @@ export default function DashboardPage() {
                         multiline
                         onChange={(c, v) => setPageForm((p) => ({ ...p, content: { ...p.content, [c]: v } }))}
                       />
+                      <div className="quick-publish-decisions">
+                        <label>
+                          <span>{isArabic ? "مكان النشر" : "Publish destination"}</span>
+                          <select value={pagePlacement} onChange={(event) => setPagePlacement(event.target.value)}>
+                            {publishingDestinations.map((option) => (
+                              <option key={option.value} value={option.value}>{option.label}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          <span>{isArabic ? "طريقة الكتابة" : "Writing mode"}</span>
+                          <select value={pageAiMode} onChange={(event) => setPageAiMode(event.target.value)}>
+                            <option value="ai">{isArabic ? "صياغة ذكية + مراجعة" : "AI-assisted + review"}</option>
+                            <option value="manual">{isArabic ? "صياغة يدوية" : "Manual writing"}</option>
+                          </select>
+                        </label>
+                      </div>
                       <div className="editor-intelligence">
                         <div className="editor-metrics-grid">
                           <article className="editor-metric-card">
