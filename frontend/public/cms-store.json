@@ -1,0 +1,751 @@
+{
+  "version": 1,
+  "updatedAt": "2026-02-13T01:48:09.067Z",
+  "settings": {
+    "hero": {
+      "title": {
+        "ar": "مؤسسة غسات الكبرى: تنمية محلية بمعايير مؤسسية واضحة",
+        "zgh": "Tasudest n Ghassate: taneflit tanaddanit s usuddes afessas",
+        "en": "Ghassate Organization: local development with institutional discipline"
+      },
+      "text": {
+        "ar": "نحوّل المبادرات المحلية إلى برامج قابلة للقياس مع حوكمة معلنة وتقارير أثر دورية.",
+        "zgh": "Nseddukel ineggura n tmurt ɣer isenfar yettwaznan s umqqim d isallen n uḍfar.",
+        "en": "We convert local initiatives into measurable programs with clear governance and periodic impact reporting."
+      },
+      "badge": {
+        "ar": "اللغة العربية هي الواجهة الرسمية",
+        "zgh": "Ta3rabt d tutlayt tagejdant n usmel",
+        "en": "Arabic is the primary language of the platform"
+      }
+    },
+    "contact": {
+      "email": "contact@ghassate.org",
+      "phone": "+212 6 00 00 00 00",
+      "address": {
+        "ar": "غسات، إقليم ورزازات، جهة درعة تافيلالت، المملكة المغربية",
+        "zgh": "Ghassate, Ouarzazate, Draa-Tafilalet, Morocco",
+        "en": "Ghassate, Ouarzazate Province, Draa-Tafilalet Region, Kingdom of Morocco"
+      }
+    },
+    "social": {
+      "facebook": "https://www.facebook.com/ghassateorg",
+      "instagram": "https://www.instagram.com/ghassateorg",
+      "linkedin": "https://www.linkedin.com/company/ghassateorg",
+      "youtube": "https://www.youtube.com/@ghassateorg"
+    },
+    "donation": {
+      "beneficiary": "Ghassate Organization",
+      "iban": "MA00 0000 0000 0000 0000 0000",
+      "bic": "GHASMA00"
+    },
+    "legal": {
+      "updatedAt": "2026-02-13",
+      "registrationNumber": "ASSO-GHS-2026",
+      "taxReference": "TAX-GHASSATE-001"
+    }
+  },
+  "projects": [
+    {
+      "id": 1,
+      "slug": "almond-blossom-festival",
+      "category": {
+        "ar": "التراث والثقافة",
+        "zgh": "Agraw d tudert n yidles",
+        "en": "Culture and Heritage"
+      },
+      "title": {
+        "ar": "مهرجان نوار اللوز بنسخة مؤسساتية متكاملة",
+        "zgh": "Amzwaru n Nwar n Luzz s usuddes anaddan",
+        "en": "Institutional Almond Blossom Festival Program"
+      },
+      "excerpt": {
+        "ar": "برنامج موسمي يربط الثقافة المحلية بالاقتصاد الاجتماعي عبر تنظيم مهني، تسويق ترابي، ومسارات دعم للعارضين.",
+        "zgh": "Aseɣru amenzu i isdukklen idles n tmurt d taserdast tanaddanit s usuddes ifazen d usezreg n tmazirt.",
+        "en": "A seasonal program linking local culture to social economy through professional delivery, place branding, and exhibitor support."
+      },
+      "status": {
+        "ar": "قيد التنفيذ",
+        "zgh": "Iṭṭef deg usemmed",
+        "en": "Active implementation"
+      },
+      "budget": {
+        "ar": "420,000 درهم",
+        "zgh": "420,000 MAD",
+        "en": "420,000 MAD"
+      },
+      "beneficiaries": {
+        "ar": "1,500 مستفيد مباشر",
+        "zgh": "1,500 infaɛen srid",
+        "en": "1,500 direct beneficiaries"
+      },
+      "implementationArea": {
+        "ar": "جماعة غسات والمجال الترابي المحيط",
+        "zgh": "Tamurt n Ghassate d usatal-is",
+        "en": "Ghassate municipality and surrounding territory"
+      },
+      "timeline": {
+        "ar": "دورة سنوية مع مراجعة بعد كل نسخة",
+        "zgh": "Aswir aseggas s usnifel deffir yal tikkelt",
+        "en": "Annual cycle with post-edition review"
+      },
+      "objectives": {
+        "ar": [
+          "رفع القيمة الاقتصادية للمنتجات المحلية خلال الموسم الثقافي.",
+          "خلق فرص تسويق عادلة للتعاونيات والحرفيين الشباب.",
+          "تعزيز صورة المنطقة كوجهة ثقافية وتنموية."
+        ],
+        "zgh": [
+          "Asnerni n wazal adelsan n yifukal n tmurt.",
+          "Asebded n iferdisen n usezreg i tdukkalin d yimeẓyanen.",
+          "Asfari n tugna n tmazirt am usatal adelsan."
+        ],
+        "en": [
+          "Increase economic value of local products during the cultural season.",
+          "Create fair market access for cooperatives and young artisans.",
+          "Strengthen the region's positioning as a cultural-development destination."
+        ]
+      },
+      "outcomes": {
+        "ar": [
+          "إشراك 78 عارضًا محليًا في الدورة الأخيرة.",
+          "توقيع اتفاقيات عرض مع ثلاث منصات تسويق وطنية.",
+          "زيادة مبيعات التعاونيات المشاركة بنسبة 32% مقارنة بالدورة السابقة."
+        ],
+        "zgh": [
+          "78 imesnedayen n tmurt kecmen deg tikkelt taneggarut.",
+          "Ttwaskren kraḍ n wugar n usezreg d tɣermawin timoqranin.",
+          "Iznan n tdukkalin ssenkern s 32% ɣef yizri."
+        ],
+        "en": [
+          "78 local exhibitors participated in the latest edition.",
+          "Three display agreements were signed with national marketplace channels.",
+          "Participating cooperatives reported a 32% sales increase compared to last cycle."
+        ]
+      },
+      "partners": {
+        "ar": [
+          "جماعة غسات",
+          "غرفة الصناعة التقليدية",
+          "جمعيات مهنية محلية"
+        ],
+        "zgh": [
+          "Tamzirt n Ghassate",
+          "Taxxamt n ṣṣnaɛa n ufus",
+          "Tsudasin n tmurt"
+        ],
+        "en": [
+          "Ghassate Municipality",
+          "Regional Craft Chamber",
+          "Local professional associations"
+        ]
+      },
+      "updatedAt": "2026-02-08"
+    },
+    {
+      "id": 2,
+      "slug": "youth-upskilling-program",
+      "category": {
+        "ar": "الشباب والمهارات",
+        "zgh": "Imeẓyanen d tmusni",
+        "en": "Youth and Skills"
+      },
+      "title": {
+        "ar": "برنامج التأهيل الرقمي والمهني للشباب",
+        "zgh": "Aseɣru n usegmi umḍin d umehni i yimeẓyanen",
+        "en": "Youth Digital and Career Upskilling Program"
+      },
+      "excerpt": {
+        "ar": "مسارات تدريبية مركزة تربط التكوين التقني بالكفاءات الحياتية والتوجيه المهني وفق احتياجات سوق الشغل المحلي.",
+        "zgh": "Ibriden n usegmi i isdukklen aselmed atiknik d tmusniyin n tudert ilmend n lḥaja n ssuq n umeksa.",
+        "en": "Focused learning tracks combining technical training, life skills, and career guidance aligned with local labor demand."
+      },
+      "status": {
+        "ar": "مرحلة التوسعة",
+        "zgh": "Amezruy n ussemɣer",
+        "en": "Scaling phase"
+      },
+      "budget": {
+        "ar": "290,000 درهم",
+        "zgh": "290,000 MAD",
+        "en": "290,000 MAD"
+      },
+      "beneficiaries": {
+        "ar": "900 مستفيد مباشر",
+        "zgh": "900 infaɛen srid",
+        "en": "900 direct beneficiaries"
+      },
+      "implementationArea": {
+        "ar": "مراكز القرب بجماعة غسات ومحيطها",
+        "zgh": "Ilemmasen n uqreb di Ghassate d idis-is",
+        "en": "Community hubs in Ghassate and nearby areas"
+      },
+      "timeline": {
+        "ar": "دورات فصلية مع تقييم بعد كل دورة",
+        "zgh": "Tikkal kul fasl s usleḍ deffir yal tikkelt",
+        "en": "Quarterly cohorts with end-of-cycle assessment"
+      },
+      "objectives": {
+        "ar": [
+          "تأهيل الشباب بمهارات رقمية مطلوبة في السوق.",
+          "ربط المستفيدين بفرص تدريب مهني وتشغيل محلية.",
+          "دعم مبادرات ريادة الأعمال المصغرة."
+        ],
+        "zgh": [
+          "Aselmed n yimeẓyanen s tmusniyin timḍinin i yettwasutren.",
+          "Asdukkel n infaɛen d iferdisen n useggem ameḥni.",
+          "Tawsa i yiseɣruten n tira n tmeslayt tmeẓẓiyt."
+        ],
+        "en": [
+          "Equip youth with market-relevant digital capabilities.",
+          "Connect beneficiaries to local internships and job pathways.",
+          "Support micro-entrepreneurship initiatives."
+        ]
+      },
+      "outcomes": {
+        "ar": [
+          "استكمال 6 أفواج تدريبية خلال 12 شهرًا.",
+          "تمكين 210 مستفيدين من فرص تدريب ميداني.",
+          "إطلاق 27 مبادرة ذاتية صغيرة بقيادة الشباب."
+        ],
+        "zgh": [
+          "6 ddufʕat n usegmi mmden deg 12 n wayyur.",
+          "210 infaɛen kufan i useggem amezwaru deg umaḍal.",
+          "27 n yimagraden imeẓyanen bdan s ufus n yimeẓyanen."
+        ],
+        "en": [
+          "Six training cohorts completed in 12 months.",
+          "210 participants accessed field internship opportunities.",
+          "27 youth-led micro-initiatives were launched."
+        ]
+      },
+      "partners": {
+        "ar": [
+          "مؤسسات تكوين مهني",
+          "مقاولات محلية",
+          "فاعلون تربويون"
+        ],
+        "zgh": [
+          "Tsudasin n usegmi ameḥni",
+          "Tirbubin n tmurt",
+          "Imsefraken n uselmed"
+        ],
+        "en": [
+          "Vocational institutes",
+          "Local businesses",
+          "Educational actors"
+        ]
+      },
+      "updatedAt": "2026-01-27"
+    },
+    {
+      "id": 3,
+      "slug": "local-cooperatives-support",
+      "category": {
+        "ar": "الاقتصاد الاجتماعي",
+        "zgh": "Taserdast tanmaddant",
+        "en": "Social Economy"
+      },
+      "title": {
+        "ar": "دعم التعاونيات وتثمين المنتجات المحلية",
+        "zgh": "Tawsa i tdukkalin d asnerni n yifukal n tmurt",
+        "en": "Cooperative Support and Local Product Valorization"
+      },
+      "excerpt": {
+        "ar": "مواكبة تقنية وتجارية للتعاونيات تشمل الهوية البصرية، سلسلة القيمة، والترويج الرقمي.",
+        "zgh": "Tanmalt atiknik d tjarit i tdukkalin deg tugna, asdukkel n wazal, d usezreg amḍin.",
+        "en": "Technical and commercial mentoring for cooperatives across branding, value chains, and digital promotion."
+      },
+      "status": {
+        "ar": "قيد التوسعة",
+        "zgh": "Iṭṭef deg ussemɣer",
+        "en": "Scaling in progress"
+      },
+      "budget": {
+        "ar": "360,000 درهم",
+        "zgh": "360,000 MAD",
+        "en": "360,000 MAD"
+      },
+      "beneficiaries": {
+        "ar": "620 مستفيد مباشر",
+        "zgh": "620 infaɛen srid",
+        "en": "620 direct beneficiaries"
+      },
+      "implementationArea": {
+        "ar": "التعاونيات النسائية والشبابية بإقليم ورزازات",
+        "zgh": "Tdukkalin n tlawin d yimeẓyanen di Warzazat",
+        "en": "Women and youth cooperatives in Ouarzazate province"
+      },
+      "timeline": {
+        "ar": "برنامج 18 شهرًا مع متابعة شهرية",
+        "zgh": "Aseɣru n 18 n wayyur s uḍfar n yal ayyur",
+        "en": "18-month program with monthly monitoring"
+      },
+      "objectives": {
+        "ar": [
+          "تحسين جودة العرض والتغليف ومواءمته مع متطلبات السوق.",
+          "توسيع القنوات الرقمية للترويج والبيع.",
+          "تعزيز قدرات التدبير المالي للتعاونيات."
+        ],
+        "zgh": [
+          "Aseggem n tquality n usken d umẓẓug ilmend n ssuq.",
+          "Assemɣer n iberdan imḍinin i usezreg d uznuzu.",
+          "Asnerni n tmusni n usedbir n tedrimt n tdukkalin."
+        ],
+        "en": [
+          "Improve product presentation and packaging quality for market readiness.",
+          "Expand digital channels for visibility and sales.",
+          "Strengthen cooperative financial management capacity."
+        ]
+      },
+      "outcomes": {
+        "ar": [
+          "إعادة تصميم هوية 34 تعاونية.",
+          "إطلاق حملات ترويج رقمي لـ 52 منتجًا محليًا.",
+          "تحسين متوسط هامش الربح لدى التعاونيات المستفيدة بنسبة 21%."
+        ],
+        "zgh": [
+          "Tugna tamaynut i 34 n tdukkalin.",
+          "Isurifen n usezreg amḍin i 52 n yifukal.",
+          "Amata n urbuḥ n tdukkalin yernu s 21%."
+        ],
+        "en": [
+          "34 cooperatives completed full brand redesign support.",
+          "Digital promotion campaigns launched for 52 local products.",
+          "Average profit margins improved by 21% among participating cooperatives."
+        ]
+      },
+      "partners": {
+        "ar": [
+          "وكالة تنمية محلية",
+          "خبراء تسويق",
+          "شبكات تعاونيات"
+        ],
+        "zgh": [
+          "Takala n tneflit n tmurt",
+          "Inelmaden n usezreg",
+          "Iẓuḍan n tdukkalin"
+        ],
+        "en": [
+          "Local development agency",
+          "Marketing experts",
+          "Cooperative networks"
+        ]
+      },
+      "updatedAt": "2026-01-12"
+    },
+    {
+      "id": 4,
+      "slug": "rural-women-economy",
+      "category": {
+        "ar": "التمكين الاقتصادي",
+        "zgh": "Asekmel anedrim",
+        "en": "Economic Inclusion"
+      },
+      "title": {
+        "ar": "تمكين المرأة القروية اقتصاديًا",
+        "zgh": "Asekmel anedrim n tmeṭṭut tamadurt",
+        "en": "Rural Women's Economic Empowerment"
+      },
+      "excerpt": {
+        "ar": "برنامج يجمع المواكبة المالية والتجارية للنساء المنتجِات مع دعم الولوج إلى الأسواق المحلية.",
+        "zgh": "Aseɣru i isdukklen tanmalt n tedrimt d tjarit i tlawin imsefraken d usekcem ɣer ssuq.",
+        "en": "A program combining financial and commercial mentoring for women producers with local market access support."
+      },
+      "status": {
+        "ar": "مكتمل",
+        "zgh": "Iummid",
+        "en": "Completed"
+      },
+      "budget": {
+        "ar": "210,000 درهم",
+        "zgh": "210,000 MAD",
+        "en": "210,000 MAD"
+      },
+      "beneficiaries": {
+        "ar": "420 مستفيدة مباشرة",
+        "zgh": "420 infaɛen srid",
+        "en": "420 direct beneficiaries"
+      },
+      "implementationArea": {
+        "ar": "الدواوير المحيطة بجماعة غسات",
+        "zgh": "Iɣrman n idis n Ghassate",
+        "en": "Rural villages around Ghassate"
+      },
+      "timeline": {
+        "ar": "12 شهرًا مع استدامة عبر خلايا متابعة محلية",
+        "zgh": "12 n wayyur s usdukkel n tduka n uḍfar n tmurt",
+        "en": "12 months with local follow-up cells for sustainability"
+      },
+      "objectives": {
+        "ar": [
+          "رفع دخل النساء المستفيدات عبر تحسين قنوات التسويق.",
+          "تعزيز الكفايات الأساسية في التدبير المالي.",
+          "تمكين المستفيدات من بناء شبكات تعاون محلية."
+        ],
+        "zgh": [
+          "Asnerni n dakhl n tlawin s ussemɣer n iberdan n uznuzu.",
+          "Aselmed n tmusniyin n tazwara deg usedbir n tedrimt.",
+          "Asdukkel n tlawin d iẓuḍan n umɛawan n tmurt."
+        ],
+        "en": [
+          "Increase beneficiaries' income through improved market channels.",
+          "Build essential financial management capabilities.",
+          "Enable beneficiaries to establish local cooperation networks."
+        ]
+      },
+      "outcomes": {
+        "ar": [
+          "تكوين 16 مجموعة نسائية على التخطيط المالي المصغر.",
+          "ربط 11 تعاونية نسائية بنقاط بيع قارة.",
+          "إرساء آلية محلية للمواكبة بعد انتهاء المشروع."
+        ],
+        "zgh": [
+          "16 n igrawen n tlawin ssufɣen aselmed n uklas anedrim ameẓẓyan.",
+          "11 n tdukkalin n tlawin qqnen ɣer inqan n uznuzu n umezdaɣ.",
+          "Tamẓla n uḍfar n tmurt tbedde deffir taggara n usenfar."
+        ],
+        "en": [
+          "16 women groups completed micro-financial planning training.",
+          "11 women-led cooperatives were connected to fixed sales points.",
+          "A local post-project support mechanism is now operational."
+        ]
+      },
+      "partners": {
+        "ar": [
+          "تعاونيات نسائية",
+          "مراكز تكوين القرب",
+          "فاعلون اجتماعيون"
+        ],
+        "zgh": [
+          "Tdukkalin n tlawin",
+          "Ilemmasen n usegmi n uqreb",
+          "Imsefraken inemlayen"
+        ],
+        "en": [
+          "Women-led cooperatives",
+          "Local training hubs",
+          "Social actors"
+        ]
+      },
+      "updatedAt": "2025-12-21"
+    }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "slug": "first-youth-cohort-launched",
+      "title": {
+        "ar": "إطلاق الدفعة الأولى من برنامج التأهيل الشبابي",
+        "zgh": "Asenker n ddufʕa tamezwarut n usegmi i yimeẓyanen",
+        "en": "First Cohort Launched for the Youth Upskilling Program"
+      },
+      "excerpt": {
+        "ar": "انطلاق رسمي لدفعة تضم 120 مستفيدًا في مسارات رقمية ومهنية مرتبطة بسوق الشغل المحلي.",
+        "zgh": "Tazwara tunṣibt n ddufʕa n 120 n unfaɛ deg iberdan imḍinin d imehnayen.",
+        "en": "Official launch of a 120-participant cohort in digital and career tracks tied to local labor demand."
+      },
+      "content": {
+        "ar": [
+          "شهد مركز التكوين المحلي بغسات انطلاقة الدفعة الأولى من برنامج التأهيل الشبابي بحضور شركاء تربويين وممثلين عن الفاعلين الاقتصاديين.",
+          "يركز البرنامج على المهارات الرقمية الأساسية، التهييء المهني، وإعداد المسار الشخصي للمستفيدين مع مواكبة فردية لكل مشارك.",
+          "أكدت المؤسسة أن هذا البرنامج يندرج ضمن رؤية بعيدة المدى تهدف إلى تقليص فجوة المهارات وربط الشباب بفرص تشغيل واقعية."
+        ],
+        "zgh": [
+          "Lmerkez n usegmi di Ghassate yebda ddufʕa tamezwarut n usegmi n yimeẓyanen s wudmawen n imendaden n uselmed d useddaw.",
+          "Aseɣru isekkil ɣef tmusniyin timḍinin, ahiyyi ameḥni, d usuddes n ubrid afardis i yal amdan.",
+          "Tsudest teqqaṛ belli aseɣru-a d aferdis n twuri taɣezfant i usdukkel n tmusni d iferdisen n umaḍal."
+        ],
+        "en": [
+          "The first youth cohort officially started at the local training hub in Ghassate, with attendance from educational partners and local employers.",
+          "The program combines foundational digital skills, employability preparation, and individualized guidance for each participant.",
+          "The organization confirmed that the initiative is part of a long-term strategy to close the skills gap and connect youth to realistic work opportunities."
+        ]
+      },
+      "keyPoints": {
+        "ar": [
+          "120 مستفيدًا",
+          "6 وحدات تدريبية",
+          "مواكبة فردية"
+        ],
+        "zgh": [
+          "120 unfaɛ",
+          "6 iferdisen n usegmi",
+          "Tanmalt afardist"
+        ],
+        "en": [
+          "120 participants",
+          "6 training modules",
+          "Individual mentoring"
+        ]
+      },
+      "author": {
+        "ar": "فريق المؤسسة",
+        "zgh": "Tarbaɛt n tsudest",
+        "en": "Organization Team"
+      },
+      "publishedAt": "2026-02-01"
+    },
+    {
+      "id": 2,
+      "slug": "new-partnership-mou-signed",
+      "title": {
+        "ar": "توقيع مذكرة تعاون مع شركاء محليين وإقليميين",
+        "zgh": "Azmul n teskerṭit n umɛawan d imendaden n tmurt",
+        "en": "Cooperation Memorandum Signed with Local and Regional Partners"
+      },
+      "excerpt": {
+        "ar": "المذكرة تؤطر مجالات التدريب، دعم التعاونيات، ونظامًا مشتركًا للتتبع والتقييم.",
+        "zgh": "Taskeṛṭit tesuddes aselmed, tawsa i tdukkalin, d anagraw n uḍfar amsdukkel.",
+        "en": "The agreement frames training, cooperative support, and a shared monitoring and evaluation system."
+      },
+      "content": {
+        "ar": [
+          "وقعت مؤسسة غسات الكبرى مذكرة تعاون جديدة مع مؤسسات شريكة بهدف توحيد الجهود حول برامج التنمية المحلية ذات الأولوية.",
+          "تنص المذكرة على تبادل الخبرات التقنية، دعم هندسة المشاريع، وتنسيق برامج التكوين لفائدة الشباب والتعاونيات.",
+          "ويمثل هذا الاتفاق خطوة عملية نحو بناء نموذج شراكة قابل للتوسع على مستوى الإقليم."
+        ],
+        "zgh": [
+          "Tasudest n Ghassate tezmel taskeṛṭit n umɛawan tamaynut d tsudasin imendaden i usdukkel n twuri n tneflit.",
+          "Taskeṛṭit tesɣer asnifel n tmusniyin atikniken d umɛiwen n usuddes n isenfar d usegmi i yimeẓyanen d tdukkalin.",
+          "Aqbel-a d asurif amezwaru i usbeddi n umedya n umɛawan yezmer ad isemɣer deg uqerru."
+        ],
+        "en": [
+          "Ghassate Organization signed a new cooperation memorandum with partner institutions to align efforts around priority local-development programs.",
+          "The agreement covers technical knowledge exchange, project design support, and coordinated training pathways for youth and cooperatives.",
+          "This partnership marks a practical step toward a scalable collaboration model across the province."
+        ]
+      },
+      "keyPoints": {
+        "ar": [
+          "مذكرة تعاون",
+          "تبادل خبرات",
+          "إطار تتبع مشترك"
+        ],
+        "zgh": [
+          "Taskeṛṭit n umɛawan",
+          "Asnifel n tmusni",
+          "Aḍfar amsdukkel"
+        ],
+        "en": [
+          "Cooperation MoU",
+          "Knowledge exchange",
+          "Shared M&E framework"
+        ]
+      },
+      "author": {
+        "ar": "وحدة الشراكات",
+        "zgh": "Aferdis n imendaden",
+        "en": "Partnership Unit"
+      },
+      "publishedAt": "2026-01-18"
+    },
+    {
+      "id": 3,
+      "slug": "annual-report-published",
+      "title": {
+        "ar": "نشر التقرير السنوي وبيانات الأثر",
+        "zgh": "Asufeɣ n umagred aseggasi d yisefka n uḍfar",
+        "en": "Annual Report and Impact Dashboard Published"
+      },
+      "excerpt": {
+        "ar": "إصدار سنوي يتضمن الإنجازات، مؤشرات التدبير المالي، وأولويات التحسين للسنة المقبلة.",
+        "zgh": "Amagred aseggasi yesɛa igmaḍ, iseqqilen n usedbir n tedrimt, d tizrawin n useggem.",
+        "en": "The annual release includes achievements, financial management indicators, and improvement priorities."
+      },
+      "content": {
+        "ar": [
+          "نشرت المؤسسة تقريرها السنوي ضمن دورة الإفصاح المؤسسي، متضمنًا حصيلة البرامج ونِسب الإنجاز حسب كل محور.",
+          "يتضمن التقرير بيانات مالية مختصرة، تحليلًا للمخاطر التشغيلية، وتوصيات عملية لتحسين النجاعة خلال السنة المقبلة.",
+          "كما أُرفق التقرير بلوحة مؤشرات أثر تتيح للزوار والمتابعين تتبع النتائج بطريقة مبسطة وشفافة."
+        ],
+        "zgh": [
+          "Tsudest tessufeɣ amagred-is aseggasi deg uswir n usufeɣ anaddan s yiwsemawen n usemmed n yal axis.",
+          "Amagred yesɛa isefka n tedrimt, asleḍ n yixṭaṛen n twuri, d yisumar n useggem i useggas d-iteddun.",
+          "Yerna yedda s tableau n uḍfar i yettasnin i yennar ad id-yeɛqel igmaḍ s ufesfus d tafrawant."
+        ],
+        "en": [
+          "The organization published its annual report as part of its institutional disclosure cycle, including delivery results by program axis.",
+          "The report provides concise financial indicators, operational risk analysis, and actionable recommendations for the coming year.",
+          "It is accompanied by an impact dashboard that allows visitors and stakeholders to follow results in a simple and transparent format."
+        ]
+      },
+      "keyPoints": {
+        "ar": [
+          "تقرير سنوي",
+          "بيانات مالية",
+          "لوحة أثر"
+        ],
+        "zgh": [
+          "Amagred aseggasi",
+          "Isefka n tedrimt",
+          "Tableau n uḍfar"
+        ],
+        "en": [
+          "Annual report",
+          "Financial indicators",
+          "Impact dashboard"
+        ]
+      },
+      "author": {
+        "ar": "مكتب الشفافية",
+        "zgh": "Axxam n tafrawant",
+        "en": "Transparency Office"
+      },
+      "publishedAt": "2025-12-30"
+    },
+    {
+      "id": 4,
+      "slug": "cooperative-market-access-program",
+      "title": {
+        "ar": "برنامج جديد لولوج التعاونيات إلى الأسواق",
+        "zgh": "Aseɣru amaynut i usekcem n tdukkalin ɣer ssuq",
+        "en": "New Market Access Program for Cooperatives"
+      },
+      "excerpt": {
+        "ar": "انطلقت مرحلة التأطير التجاري للتعاونيات المحلية بهدف تحسين قنوات البيع والتموقع السوقي.",
+        "zgh": "Bdat tikkelt n useddes ajar i tdukkalin n tmurt i ussemɣer n iberdan n uznuzu.",
+        "en": "A commercial mentoring phase has launched to strengthen sales channels and market positioning."
+      },
+      "content": {
+        "ar": [
+          "أعلنت المؤسسة عن انطلاق برنامج نوعي لمواكبة التعاونيات في تحليل السوق، تصميم العروض، وتطوير استراتيجيات البيع.",
+          "يشمل البرنامج جلسات تدريب تطبيقية وزيارات ميدانية لربط المنتج المحلي باحتياجات الزبناء المحتملين.",
+          "وتؤكد المؤسسة أن النتائج الأولية تبين تحسنًا ملحوظًا في جودة العرض واستعداد التعاونيات للتوسع."
+        ],
+        "zgh": [
+          "Tsudest tessawel ɣef asenker n useɣru i uselmad n tdukkalin deg usleḍ n ssuq d usuddes n usken d ubeddel n uznuzu.",
+          "Aseɣru yesɛa tizegzewin n uselmed amsuden d tirziyent n umaḍal i usdukkel n ufukal n tmurt d lḥajat n yimsaɣen.",
+          "Tsudest teqqar belli igmaḍ imezwaren ssenkren deg tquality n usken d usiwel i ussemɣer."
+        ],
+        "en": [
+          "The organization launched a dedicated program to support cooperatives in market analysis, offer design, and sales strategy development.",
+          "The program includes practical training sessions and field visits to align local products with buyer demand.",
+          "Early results indicate noticeable progress in product presentation and cooperative readiness for scale."
+        ]
+      },
+      "keyPoints": {
+        "ar": [
+          "تحليل السوق",
+          "تأطير تجاري",
+          "تحسين العرض"
+        ],
+        "zgh": [
+          "Asleḍ n ssuq",
+          "Asuddes ajar",
+          "Aseggem n usken"
+        ],
+        "en": [
+          "Market analysis",
+          "Commercial mentoring",
+          "Offer optimization"
+        ]
+      },
+      "author": {
+        "ar": "وحدة التنمية الاقتصادية",
+        "zgh": "Aferdis n tneflit tanedrimt",
+        "en": "Economic Development Unit"
+      },
+      "publishedAt": "2025-11-20"
+    }
+  ],
+  "impact": {
+    "ar": [
+      {
+        "label": "معدل إنجاز البرامج",
+        "value": "89%"
+      },
+      {
+        "label": "تقارير منشورة",
+        "value": "14"
+      },
+      {
+        "label": "شريكًا محليًا",
+        "value": "35+"
+      },
+      {
+        "label": "مستفيد مباشر",
+        "value": "4,200"
+      }
+    ],
+    "zgh": [
+      {
+        "label": "Aswir n usemmed n isenfar",
+        "value": "89%"
+      },
+      {
+        "label": "Imagraden i d-neffeɣ",
+        "value": "14"
+      },
+      {
+        "label": "Imendaden n tmurt",
+        "value": "35+"
+      },
+      {
+        "label": "Infaɛen srid",
+        "value": "4,200"
+      }
+    ],
+    "en": [
+      {
+        "label": "Program completion rate",
+        "value": "89%"
+      },
+      {
+        "label": "Published reports",
+        "value": "14"
+      },
+      {
+        "label": "Local partners",
+        "value": "35+"
+      },
+      {
+        "label": "Direct beneficiaries",
+        "value": "4,200"
+      }
+    ]
+  },
+  "media": [
+    {
+      "id": 1,
+      "slug": "festival-main-stage",
+      "type": "image",
+      "title": {
+        "ar": "منصة المهرجان - النسخة الأخيرة",
+        "zgh": "Asfari n umzruy - tikkelt taneggarut",
+        "en": "Festival Main Stage - Latest Edition"
+      },
+      "description": {
+        "ar": "لقطة من فضاء الأنشطة الثقافية خلال برنامج نوار اللوز.",
+        "zgh": "Tugna n usatal adelsan deg useɣru n Nwar n Luzz.",
+        "en": "Scene from the cultural activities area during the Almond Blossom program."
+      },
+      "url": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
+      "thumbnail": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80",
+      "createdAt": "2026-02-05T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "slug": "youth-training-lab",
+      "type": "video",
+      "title": {
+        "ar": "مختبر التكوين الشبابي",
+        "zgh": "Axxam n usegmi n yimeẓyanen",
+        "en": "Youth Training Lab"
+      },
+      "description": {
+        "ar": "فيديو قصير يوثق ورشات المهارات الرقمية.",
+        "zgh": "Avidyu amezzyan i yesseknen tizegzewin timḍinin.",
+        "en": "Short video documenting digital skills workshops."
+      },
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+      "createdAt": "2026-01-30T09:00:00.000Z"
+    }
+  ],
+  "nextIds": {
+    "projects": 6,
+    "news": 5,
+    "media": 4
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "ghassateorg",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend install && npm --prefix frontend run build",
+    "build:frontend:watch": "npm --prefix frontend run build:watch",
+    "dev:backend": "npm --prefix backend run dev",
+    "start:backend": "npm --prefix backend run start"
+  }
+}

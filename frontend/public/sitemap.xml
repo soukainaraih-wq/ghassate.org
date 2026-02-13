@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://ghassate.org/ar</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/about</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/about" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/team</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/team" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/team" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/team" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/team" />
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/projects</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/news</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news" />
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/integrity-charter</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/integrity-charter" />
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/membership</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/membership" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/membership" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/membership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/membership" />
+    <changefreq>weekly</changefreq>
+    <priority>0.84</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/privacy-policy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/contact</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/donate</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/donate" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/donate" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/donate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/donate" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/about</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/about" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/team</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/team" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/team" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/team" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/team" />
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/projects</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/news</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news" />
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/integrity-charter</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/integrity-charter" />
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/membership</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/membership" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/membership" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/membership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/membership" />
+    <changefreq>weekly</changefreq>
+    <priority>0.84</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/privacy-policy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/contact</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/donate</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/donate" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/donate" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/donate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/donate" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/about" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/team</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/team" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/team" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/team" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/team" />
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/projects</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/news</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news" />
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/integrity-charter</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/integrity-charter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/integrity-charter" />
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/membership</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/membership" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/membership" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/membership" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/membership" />
+    <changefreq>weekly</changefreq>
+    <priority>0.84</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/privacy-policy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/contact" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/donate</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/donate" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/donate" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/donate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/donate" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/projects/almond-blossom-festival</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/almond-blossom-festival" />
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/projects/almond-blossom-festival</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/almond-blossom-festival" />
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/projects/almond-blossom-festival</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/almond-blossom-festival" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/almond-blossom-festival" />
+    <lastmod>2026-02-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/projects/youth-upskilling-program</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/youth-upskilling-program" />
+    <lastmod>2026-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/projects/youth-upskilling-program</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/youth-upskilling-program" />
+    <lastmod>2026-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/projects/youth-upskilling-program</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/youth-upskilling-program" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/youth-upskilling-program" />
+    <lastmod>2026-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/projects/local-cooperatives-support</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/local-cooperatives-support" />
+    <lastmod>2025-12-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/projects/local-cooperatives-support</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/local-cooperatives-support" />
+    <lastmod>2025-12-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/projects/local-cooperatives-support</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/local-cooperatives-support" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/local-cooperatives-support" />
+    <lastmod>2025-12-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/projects/rural-women-economy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/rural-women-economy" />
+    <lastmod>2025-11-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/projects/rural-women-economy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/rural-women-economy" />
+    <lastmod>2025-11-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/projects/rural-women-economy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/projects/rural-women-economy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/projects/rural-women-economy" />
+    <lastmod>2025-11-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/news/first-youth-cohort-launched</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/first-youth-cohort-launched" />
+    <lastmod>2026-02-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/news/first-youth-cohort-launched</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/first-youth-cohort-launched" />
+    <lastmod>2026-02-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/news/first-youth-cohort-launched</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/first-youth-cohort-launched" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/first-youth-cohort-launched" />
+    <lastmod>2026-02-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/news/new-partnership-mou-signed</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/new-partnership-mou-signed" />
+    <lastmod>2026-01-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/news/new-partnership-mou-signed</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/new-partnership-mou-signed" />
+    <lastmod>2026-01-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/news/new-partnership-mou-signed</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/new-partnership-mou-signed" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/new-partnership-mou-signed" />
+    <lastmod>2026-01-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/news/annual-report-published</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/annual-report-published" />
+    <lastmod>2025-12-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/news/annual-report-published</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/annual-report-published" />
+    <lastmod>2025-12-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/news/annual-report-published</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/annual-report-published" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/annual-report-published" />
+    <lastmod>2025-12-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/ar/news/cooperative-market-access-program</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/cooperative-market-access-program" />
+    <lastmod>2025-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/zgh/news/cooperative-market-access-program</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/cooperative-market-access-program" />
+    <lastmod>2025-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://ghassate.org/en/news/cooperative-market-access-program</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ghassate.org/ar/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="zgh" href="https://ghassate.org/zgh/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://ghassate.org/en/news/cooperative-market-access-program" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ghassate.org/ar/news/cooperative-market-access-program" />
+    <lastmod>2025-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.72</priority>
+  </url>
+</urlset>

@@ -1,0 +1,12 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Keep PHP backend routes untouched.
+RewriteCond %{REQUEST_URI} ^/api(/|$) [NC]
+RewriteRule ^ - [L]
+
+# React SPA fallback.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

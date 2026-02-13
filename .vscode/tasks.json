@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Frontend Build Watch (Auto Deploy)",
+      "type": "shell",
+      "command": "npm run build:frontend:watch",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      }
+    },
+    {
+      "label": "Frontend One-Time Build",
+      "type": "shell",
+      "command": "npm --prefix frontend run build",
+      "problemMatcher": []
+    }
+  ]
+}
