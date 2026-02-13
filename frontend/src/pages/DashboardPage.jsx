@@ -1023,7 +1023,7 @@ export default function DashboardPage() {
           <div className="container admin-shell">
             <div className="admin-toolbar">
               <div className="admin-toolbar-main">
-                <h3>{isArabic ? "لوحة التحكم" : "Dashboard"}</h3>
+                <h3>{isArabic ? "استوديو إدارة المحتوى" : "Content Studio"}</h3>
                 <p className="admin-toolbar-meta">
                   <span className="admin-status-dot"></span>
                   {isArabic ? "آخر تحديث:" : "Last update:"} <strong>{updatedAtLabel}</strong>
@@ -1198,27 +1198,58 @@ export default function DashboardPage() {
                   <div className="admin-command-grid">
                     <article className="surface-card admin-command-card">
                       <div className="admin-command-head">
-                        <h3>{isArabic ? "جدول النشر" : "Publishing Queue"}</h3>
-                        <span>{isArabic ? "آخر العناصر" : "Latest entries"}</span>
+                        <h3>{isArabic ? "خط إنتاج النشر" : "Publishing Pipeline"}</h3>
+                        <span>{isArabic ? "رحلة المحتوى" : "Content Journey"}</span>
                       </div>
-                      <div className="admin-activity-list">
-                        {publishingQueue.length ? (
-                          publishingQueue.map((entry) => (
-                            <div key={entry.id} className="admin-activity-item">
-                              <em>{entry.type} • {entry.status}</em>
-                              <strong>{entry.title || (isArabic ? "بدون عنوان" : "Untitled")}</strong>
+                      <div className="joy-pipeline">
+                        {[
+                          {
+                            key: "idea",
+                            title: isArabic ? "1) فكرة" : "1) Idea",
+                            chip: isArabic ? "مقترحات" : "Proposals",
+                            items: [
+                              isArabic ? "حملة ميدانية جديدة" : "New field campaign",
+                              isArabic ? "مقال قصة نجاح" : "Success story post"
+                            ]
+                          },
+                          {
+                            key: "draft",
+                            title: isArabic ? "2) مسودة" : "2) Draft",
+                            chip: `${draftPagesCount}`,
+                            items: publishingQueue.filter((x) => x.status === (isArabic ? "مسودة" : "Draft")).slice(0, 3).map((x) => x.title)
+                          },
+                          {
+                            key: "review",
+                            title: isArabic ? "3) مراجعة" : "3) Review",
+                            chip: isArabic ? "جاهز للتدقيق" : "Ready to review",
+                            items: publishingQueue.slice(0, 3).map((x) => x.title)
+                          },
+                          {
+                            key: "publish",
+                            title: isArabic ? "4) نشر" : "4) Publish",
+                            chip: isArabic ? "منشور" : "Published",
+                            items: publishingQueue.filter((x) => x.status !== (isArabic ? "مسودة" : "Draft")).slice(0, 3).map((x) => x.title)
+                          }
+                        ].map((stage) => (
+                          <div className="joy-stage" key={stage.key}>
+                            <h4>{stage.title}</h4>
+                            <span className="joy-chip">{stage.chip}</span>
+                            <div className="joy-stage-list">
+                              {(stage.items.length ? stage.items : [isArabic ? "لا عناصر" : "No items"]).map((label, index) => (
+                                <div className="joy-stage-item" key={`${stage.key}-${index}`}>
+                                  {label || (isArabic ? "بدون عنوان" : "Untitled")}
+                                </div>
+                              ))}
                             </div>
-                          ))
-                        ) : (
-                          <p className="admin-empty-state">{isArabic ? "لا توجد عناصر للنشر حالياً." : "No publishing entries yet."}</p>
-                        )}
+                          </div>
+                        ))}
                       </div>
                     </article>
 
                     <article className="surface-card admin-command-card">
                       <div className="admin-command-head">
-                        <h3>{isArabic ? "عمليات النشر" : "Publishing Actions"}</h3>
-                        <span>{isArabic ? "اختصارات" : "Shortcuts"}</span>
+                        <h3>{isArabic ? "لوحة قرارات النشر" : "Publishing Decision Board"}</h3>
+                        <span>{isArabic ? "تنفيذ سريع" : "Quick execution"}</span>
                       </div>
                       <div className="admin-quick-actions">
                         <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("news")}>
@@ -1233,6 +1264,10 @@ export default function DashboardPage() {
                           <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" /></svg>
                           {isArabic ? "رفع وسائط" : "Upload Media"}
                         </button>
+                        <button type="button" className="admin-quick-btn" onClick={() => setActiveTab("insights")}>
+                          <svg viewBox="0 0 24 24"><path d="M4 19h16M7 16V8m5 8V4m5 12v-6" /></svg>
+                          {isArabic ? "مراجعة الجودة" : "Quality Review"}
+                        </button>
                       </div>
                       <ul className="admin-check-list">
                         <li>
@@ -1242,6 +1277,10 @@ export default function DashboardPage() {
                         <li>
                           <span>{isArabic ? "عناصر ناقصة Slug" : "Missing slug"}</span>
                           <strong>{missingSlugCount}</strong>
+                        </li>
+                        <li>
+                          <span>{isArabic ? "آخر حفظ تلقائي" : "Last autosave"}</span>
+                          <strong>{autoSaveLabel || "--:--"}</strong>
                         </li>
                       </ul>
                     </article>
