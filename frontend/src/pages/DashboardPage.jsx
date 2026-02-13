@@ -24,7 +24,7 @@ import { DASHBOARD_SECRET_PATH } from "../lib/runtime-config";
 
 const TOKEN_STORAGE_KEY = "ghassate_admin_jwt";
 const TAB_STORAGE_KEY = "ghassate_dashboard_tab";
-const tabs = ["overview", "settings", "projects", "news", "pages", "media"];
+const tabs = ["overview", "projects", "news", "pages", "media", "settings"];
 const localizedTemplate = { ar: "", zgh: "", en: "" };
 
 /* ── Inline SVG Icons ── */
@@ -53,10 +53,56 @@ const kpiIcons = [
 ];
 
 function toTextMap(value) {
+  const resolvedArabic = Array.isArray(value?.ar)
+    ? value.ar.join("\n")
+    : value?.ar || value?.zgh || value?.en || "";
+
   return {
-    ar: Array.isArray(value?.ar) ? value.ar.join("\n") : value?.ar || "",
+    ar: resolvedArabic,
     zgh: Array.isArray(value?.zgh) ? value.zgh.join("\n") : value?.zgh || "",
     en: Array.isArray(value?.en) ? value.en.join("\n") : value?.en || ""
+  };
+}
+
+async function translateFromArabic(text, targetLang) {
+  const clean = String(text || "").trim();
+  if (!clean || targetLang === "ar") {
+    return clean;
+  }
+
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${targetLang}&dt=t&q=${encodeURIComponent(clean)}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      return clean;
+    }
+
+    const payload = await response.json();
+    const translated = Array.isArray(payload?.[0])
+      ? payload[0].map((part) => part?.[0] || "").join("")
+      : "";
+
+    return translated || clean;
+  } catch {
+    return clean;
+  }
+}
+
+async function buildLocalizedFromArabic(value) {
+  const arabic = String(value || "").trim();
+  if (!arabic) {
+    return { ...localizedTemplate };
+  }
+
+  const [zgh, en] = await Promise.all([
+    translateFromArabic(arabic, "ber"),
+    translateFromArabic(arabic, "en")
+  ]);
+
+  return {
+    ar: arabic,
+    zgh: zgh || arabic,
+    en: en || arabic
   };
 }
 
@@ -105,26 +151,20 @@ function formatShortDate(value, lang) {
 
 function LocalizedEditor({ label, value, onChange, multiline = false }) {
   const Tag = multiline ? "textarea" : "input";
-  const langs = [
-    { code: "ar", label: "العربية" },
-    { code: "zgh", label: "الأمازيغية" },
-    { code: "en", label: "English" }
-  ];
+  const arabicValue = value?.ar || value?.zgh || value?.en || "";
 
   return (
     <div className="dashboard-field-group">
       <h4>{label}</h4>
       <div className="dashboard-field-grid">
-        {langs.map((entry) => (
-          <label key={`${label}-${entry.code}`}>
-            <span>{entry.label}</span>
-            <Tag
-              value={value?.[entry.code] || ""}
-              rows={multiline ? 4 : undefined}
-              onChange={(event) => onChange(entry.code, event.target.value)}
-            />
-          </label>
-        ))}
+        <label>
+          <span>العربية</span>
+          <Tag
+            value={arabicValue}
+            rows={multiline ? 4 : undefined}
+            onChange={(event) => onChange("ar", event.target.value)}
+          />
+        </label>
       </div>
     </div>
   );
@@ -223,17 +263,17 @@ export default function DashboardPage() {
   const pushToast = useCallback((msg, type = "success") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, msg, type }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3700);
   }, []);
 
   const tabLabels = useMemo(
     () => ({
-      overview: isArabic ? "نظرة عامة" : "Overview",
-      settings: isArabic ? "إعدادات الموقع" : "Settings",
+      overview: isArabic ? "الرئيسية" : "Home",
       projects: isArabic ? "المشاريع" : "Projects",
-      news: isArabic ? "المقالات والمنشورات" : "Posts",
+      news: isArabic ? "الأخبار" : "News",
       pages: isArabic ? "الصفحات" : "Pages",
-      media: isArabic ? "الوسائط" : "Media"
+      media: isArabic ? "مكتبة الوسائط" : "Media Library",
+      settings: isArabic ? "الإعدادات العامة" : "General Settings"
     }),
     [isArabic]
   );
@@ -429,7 +469,21 @@ export default function DashboardPage() {
     setError("");
     setNotice("");
     try {
-      await updateAdminSettings(token, settingsForm);
+      const payload = {
+        ...settingsForm,
+        hero: {
+          ...settingsForm.hero,
+          title: await buildLocalizedFromArabic(settingsForm.hero?.title?.ar || ""),
+          text: await buildLocalizedFromArabic(settingsForm.hero?.text?.ar || ""),
+          badge: await buildLocalizedFromArabic(settingsForm.hero?.badge?.ar || "")
+        },
+        contact: {
+          ...settingsForm.contact,
+          address: await buildLocalizedFromArabic(settingsForm.contact?.address?.ar || "")
+        }
+      };
+
+      await updateAdminSettings(token, payload);
       await loadCms(token);
       pushToast(isArabic ? "تم حفظ الإعدادات." : "Settings saved.");
     } catch (requestError) {
@@ -447,6 +501,17 @@ export default function DashboardPage() {
     try {
       const payload = {
         ...projectForm,
+        category: await buildLocalizedFromArabic(projectForm.category?.ar || ""),
+        title: await buildLocalizedFromArabic(projectForm.title?.ar || ""),
+        excerpt: await buildLocalizedFromArabic(projectForm.excerpt?.ar || ""),
+        status: await buildLocalizedFromArabic(projectForm.status?.ar || ""),
+        budget: await buildLocalizedFromArabic(projectForm.budget?.ar || ""),
+        beneficiaries: await buildLocalizedFromArabic(projectForm.beneficiaries?.ar || ""),
+        implementationArea: await buildLocalizedFromArabic(projectForm.implementationArea?.ar || ""),
+        timeline: await buildLocalizedFromArabic(projectForm.timeline?.ar || ""),
+        objectives: await buildLocalizedFromArabic(projectForm.objectives?.ar || ""),
+        outcomes: await buildLocalizedFromArabic(projectForm.outcomes?.ar || ""),
+        partners: await buildLocalizedFromArabic(projectForm.partners?.ar || ""),
         updatedAt: projectForm.updatedAt || new Date().toISOString().slice(0, 10)
       };
       if (editingProjectId) {
@@ -493,6 +558,11 @@ export default function DashboardPage() {
     try {
       const payload = {
         ...newsForm,
+        title: await buildLocalizedFromArabic(newsForm.title?.ar || ""),
+        excerpt: await buildLocalizedFromArabic(newsForm.excerpt?.ar || ""),
+        content: await buildLocalizedFromArabic(newsForm.content?.ar || ""),
+        keyPoints: await buildLocalizedFromArabic(newsForm.keyPoints?.ar || ""),
+        author: await buildLocalizedFromArabic(newsForm.author?.ar || ""),
         publishedAt: newsForm.publishedAt || new Date().toISOString().slice(0, 10)
       };
       if (editingNewsId) {
@@ -539,6 +609,9 @@ export default function DashboardPage() {
     try {
       const payload = {
         ...pageForm,
+        title: await buildLocalizedFromArabic(pageForm.title?.ar || ""),
+        excerpt: await buildLocalizedFromArabic(pageForm.excerpt?.ar || ""),
+        content: await buildLocalizedFromArabic(pageForm.content?.ar || ""),
         status: String(pageForm.status || "published").toLowerCase(),
         publishedAt: pageForm.publishedAt || new Date().toISOString().slice(0, 10),
         updatedAt: new Date().toISOString().slice(0, 10)
@@ -585,10 +658,16 @@ export default function DashboardPage() {
     setError("");
     setNotice("");
     try {
+      const payload = {
+        ...mediaForm,
+        title: await buildLocalizedFromArabic(mediaForm.title?.ar || ""),
+        description: await buildLocalizedFromArabic(mediaForm.description?.ar || "")
+      };
+
       if (editingMediaId) {
-        await updateAdminMedia(token, editingMediaId, mediaForm);
+        await updateAdminMedia(token, editingMediaId, payload);
       } else {
-        await createAdminMedia(token, mediaForm);
+        await createAdminMedia(token, payload);
       }
       await loadCms(token);
       resetMediaForm();
