@@ -368,6 +368,13 @@ export function subscribeNewsletter(payload) {
   });
 }
 
+export function adminLogin(email, password) {
+  return request("/admin/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password })
+  });
+}
+
 function requireAdminToken(token) {
   const normalized = String(token || "").trim();
   if (!normalized) {
@@ -382,7 +389,7 @@ function adminRequest(path, token, options = {}) {
   return request(path, {
     ...options,
     headers: {
-      "X-Admin-Token": securedToken,
+      "Authorization": `Bearer ${securedToken}`,
       ...(options.headers || {})
     }
   });

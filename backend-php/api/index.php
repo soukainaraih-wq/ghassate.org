@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 $config = require __DIR__ . '/config.php';
+$authConfig = require __DIR__ . '/auth-config.php';
+require __DIR__ . '/auth.php';
 
 $storageDir = __DIR__ . '/storage';
 $rateDir = $storageDir . '/rate';
@@ -103,6 +105,19 @@ if ($routePath === '/health' && is_read_only_method($method)) {
     ]);
 }
 
+if ($routePath === '/admin/login') {
+    handle_admin_login(
+        $method,
+        $lang,
+        $body,
+        $clientIp,
+        $authConfig,
+        $rateDir,
+        (int) $config['rate_window_seconds'],
+        (int) $config['max_rate_keys']
+    );
+}
+
 if (str_starts_with($routePath, '/admin')) {
     handle_admin_routes(
         $routePath,
@@ -112,6 +127,7 @@ if (str_starts_with($routePath, '/admin')) {
         $body,
         $clientIp,
         $config,
+        $authConfig,
         $cmsStorePath,
         $contactPath,
         $newsletterPath,
@@ -384,6 +400,7 @@ function handle_admin_routes(
     array $body,
     string $clientIp,
     array $config,
+    array $authConfig,
     string $cmsStorePath,
     string $contactPath,
     string $newsletterPath,
@@ -394,14 +411,6 @@ function handle_admin_routes(
 ): void {
     if (!(bool) $config['enable_admin_endpoint']) {
         json_response(['message' => 'Route not found.'], 404);
-    }
-
-    $adminToken = trim((string) $config['admin_token']);
-    $isProd = ($config['app_env'] ?? 'production') === 'production';
-    $minLength = (int) ($config['min_admin_token_length'] ?? 32);
-
-    if ($isProd && strlen($adminToken) < $minLength) {
-        json_response(['message' => 'Admin endpoint is disabled due to missing secure token.'], 503);
     }
 
     $adminRate = apply_rate_limit(
@@ -420,8 +429,8 @@ function handle_admin_routes(
         );
     }
 
-    $provided = trim((string) ($headers['x-admin-token'] ?? ''));
-    if ($provided === '' || !hash_equals($adminToken, $provided)) {
+    // Authenticate via JWT (primary) or legacy X-Admin-Token (fallback)
+    if (!authenticate_jwt_or_token($headers, $config, $authConfig)) {
         json_response(['message' => 'Unauthorized.'], 401);
     }
 
@@ -965,7 +974,7 @@ function apply_cors_headers(string $origin, string $refererOrigin, array $allowe
 
     header('Vary: Origin', false);
     header('Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD');
-    header('Access-Control-Allow-Headers: Content-Type, X-Admin-Token');
+    header('Access-Control-Allow-Headers: Content-Type, X-Admin-Token, Authorization');
     header('Access-Control-Max-Age: 600');
 }
 

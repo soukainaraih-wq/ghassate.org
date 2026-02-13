@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import Seo from "../components/Seo";
 import {
+  adminLogin,
   createAdminMedia,
   createAdminNews,
   createAdminPage,
@@ -21,7 +22,7 @@ import {
 } from "../lib/api";
 import { DASHBOARD_SECRET_PATH } from "../lib/runtime-config";
 
-const TOKEN_STORAGE_KEY = "ghassate_admin_token";
+const TOKEN_STORAGE_KEY = "ghassate_admin_jwt";
 const TAB_STORAGE_KEY = "ghassate_dashboard_tab";
 const tabs = ["overview", "settings", "projects", "news", "pages", "media"];
 const localizedTemplate = { ar: "", zgh: "", en: "" };
@@ -166,7 +167,9 @@ export default function DashboardPage() {
   const isArabic = lang !== "en";
 
   const [token, setToken] = useState("");
-  const [tokenInput, setTokenInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [cms, setCms] = useState(null);
   const [summary, setSummary] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
@@ -254,7 +257,6 @@ export default function DashboardPage() {
 
     if (savedToken) {
       setToken(savedToken);
-      setTokenInput(savedToken);
     }
 
     if (tabs.includes(savedTab)) {
@@ -289,9 +291,20 @@ export default function DashboardPage() {
       setSummary(summaryData);
       setSettingsForm(cmsData.settings);
     } catch (requestError) {
+      const msg = requestError?.message || "";
+      const isUnauthorized = msg.toLowerCase().includes("unauthorized") || msg.includes("401");
+      if (isUnauthorized) {
+        // JWT expired or invalid — force re-login
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+        }
+        setToken("");
+        setError(isArabic ? "انتهت صلاحية الجلسة. سجّل الدخول مجدداً." : "Session expired. Please log in again.");
+      } else {
+        setError(msg || (isArabic ? "تعذر الوصول إلى لوحة التحكم." : "Dashboard access failed."));
+      }
       setCms(null);
       setSummary(null);
-      setError(requestError?.message || (isArabic ? "تعذر الوصول إلى لوحة التحكم." : "Dashboard access failed."));
     } finally {
       setLoading(false);
     }
@@ -317,21 +330,38 @@ export default function DashboardPage() {
     setMediaForm(emptyMedia());
   }
 
-  function onLogin(event) {
+  async function onLogin(event) {
     event.preventDefault();
-    const value = tokenInput.trim();
-    if (!value) {
-      setError(isArabic ? "أدخل توكن الإدارة." : "Enter admin token.");
+    const email = emailInput.trim();
+    const password = passwordInput;
+    if (!email || !password) {
+      setError(isArabic ? "أدخل البريد الإلكتروني وكلمة السر." : "Enter email and password.");
       return;
     }
 
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(TOKEN_STORAGE_KEY, value);
-    }
-
-    setToken(value);
+    setLoginLoading(true);
     setError("");
-    setNotice("");
+
+    try {
+      const response = await adminLogin(email, password);
+      const jwt = response.token;
+
+      if (!jwt) {
+        setError(isArabic ? "لم يتم استلام رمز الجلسة." : "No session token received.");
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(TOKEN_STORAGE_KEY, jwt);
+      }
+
+      setToken(jwt);
+      setNotice("");
+    } catch (requestError) {
+      setError(requestError?.message || (isArabic ? "فشل تسجيل الدخول." : "Login failed."));
+    } finally {
+      setLoginLoading(false);
+    }
   }
 
   function logout() {
@@ -339,7 +369,8 @@ export default function DashboardPage() {
       window.localStorage.removeItem(TOKEN_STORAGE_KEY);
     }
     setToken("");
-    setTokenInput("");
+    setEmailInput("");
+    setPasswordInput("");
     setCms(null);
     setSummary(null);
     setSettingsForm(null);
@@ -596,19 +627,31 @@ export default function DashboardPage() {
               <h3>{isArabic ? "تسجيل الدخول" : "Sign In"}</h3>
               <p>
                 {isArabic
-                  ? "الدخول متاح فقط للتوكن الإداري الصحيح."
-                  : "Access is restricted to a valid admin token only."}
+                  ? "الدخول متاح فقط للمسؤولين المصرح لهم."
+                  : "Access is restricted to authorized administrators only."}
               </p>
-              <label htmlFor="admin-token">{isArabic ? "توكن الإدارة" : "Admin Token"}</label>
+              <label htmlFor="admin-email">{isArabic ? "البريد الإلكتروني" : "Email"}</label>
               <input
-                id="admin-token"
-                type="password"
-                value={tokenInput}
-                onChange={(event) => setTokenInput(event.target.value)}
+                id="admin-email"
+                type="email"
+                autoComplete="email"
+                value={emailInput}
+                onChange={(event) => setEmailInput(event.target.value)}
                 required
               />
-              <button className="btn btn-primary" type="submit">
-                {isArabic ? "دخول اللوحة" : "Access Dashboard"}
+              <label htmlFor="admin-password">{isArabic ? "كلمة السر" : "Password"}</label>
+              <input
+                id="admin-password"
+                type="password"
+                autoComplete="current-password"
+                value={passwordInput}
+                onChange={(event) => setPasswordInput(event.target.value)}
+                required
+              />
+              <button className="btn btn-primary" type="submit" disabled={loginLoading}>
+                {loginLoading
+                  ? (isArabic ? "جارٍ التحقق..." : "Verifying...")
+                  : (isArabic ? "دخول اللوحة" : "Access Dashboard")}
               </button>
               {error ? <p className="form-message error">{error}</p> : null}
             </form>
