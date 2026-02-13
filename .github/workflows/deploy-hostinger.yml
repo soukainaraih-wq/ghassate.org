@@ -36,19 +36,22 @@ jobs:
           VITE_DASHBOARD_SECRET_MIN_LENGTH: ${{ secrets.VITE_DASHBOARD_SECRET_MIN_LENGTH }}
         run: npm --prefix frontend run build
 
-      - name: Install sshpass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.SFTP_PORT }} ${{ secrets.SFTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Upload Frontend Dist
         env:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_REMOTE_FRONTEND_PATH: ${{ secrets.SFTP_REMOTE_FRONTEND_PATH }}
         run: |
-          sshpass -p "$SFTP_PASSWORD" rsync -avz --delete \
-            -e "ssh -p $SFTP_PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+          rsync -avz --delete \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/id_ed25519" \
             frontend/dist/ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_FRONTEND_PATH/"
 
       - name: Upload Backend API Code (Preserve storage data)
@@ -56,10 +59,13 @@ jobs:
           SFTP_HOST: ${{ secrets.SFTP_HOST }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_REMOTE_API_PATH: ${{ secrets.SFTP_REMOTE_API_PATH }}
         run: |
-          sshpass -p "$SFTP_PASSWORD" rsync -avz \
+          rsync -avz \
             --exclude 'storage/' \
-            -e "ssh -p $SFTP_PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+            -e "ssh -p $SFTP_PORT -i ~/.ssh/id_ed25519" \
             backend-php/api/ "$SFTP_USERNAME@$SFTP_HOST:$SFTP_REMOTE_API_PATH/"
+
+      - name: Cleanup SSH Key
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519
