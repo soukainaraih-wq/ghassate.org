@@ -697,6 +697,7 @@ export default function DashboardPage() {
               <div className="admin-toolbar-main">
                 <h3>{isArabic ? "لوحة التحكم" : "Dashboard"}</h3>
                 <p className="admin-toolbar-meta">
+                  <span className="admin-status-dot"></span>
                   {isArabic ? "آخر تحديث:" : "Last update:"} <strong>{updatedAtLabel}</strong>
                 </p>
               </div>
@@ -740,6 +741,25 @@ export default function DashboardPage() {
                   <>
                 {activeTab === "overview" ? (
                   <>
+                    <div className="admin-welcome">
+                      <div className="admin-welcome-text">
+                        <h2>{isArabic ? "مرحباً بك في لوحة التحكم" : "Welcome to your Dashboard"}</h2>
+                        <p>{isArabic
+                          ? "إدارة مركزية لجميع محتويات مؤسسة غسات الكبرى — المشاريع، الأخبار، الصفحات والوسائط."
+                          : "Central management for all Ghassate Organization content — projects, news, pages and media."}</p>
+                      </div>
+                      <div className="admin-welcome-stat">
+                        <div className="admin-welcome-stat-item">
+                          <strong>{(summary?.totals?.projects ?? cms.projects.length) + (summary?.totals?.news ?? cms.news.length)}</strong>
+                          <span>{isArabic ? "محتوى" : "Content"}</span>
+                        </div>
+                        <div className="admin-welcome-stat-item">
+                          <strong>{(summary?.totals?.contactSubmissions ?? 0) + (summary?.totals?.newsletterSubscribers ?? 0)}</strong>
+                          <span>{isArabic ? "تفاعل" : "Interactions"}</span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="cards-grid grid-3 admin-overview-grid">
                       {[
                         { label: isArabic ? "المشاريع" : "Projects", value: summary?.totals?.projects ?? cms.projects.length },
