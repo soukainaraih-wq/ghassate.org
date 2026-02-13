@@ -1078,6 +1078,15 @@ function normalized_headers(): array
         $headers[strtolower((string) $name)] = is_array($value) ? (string) reset($value) : (string) $value;
     }
 
+    // Apache/CGI often strips Authorization header; recover from server vars
+    if (empty($headers['authorization'])) {
+        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            $headers['authorization'] = $_SERVER['HTTP_AUTHORIZATION'];
+        } elseif (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $headers['authorization'] = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        }
+    }
+
     return $headers;
 }
 
