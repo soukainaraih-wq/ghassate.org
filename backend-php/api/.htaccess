@@ -1,5 +1,13 @@
 Options -Indexes
 
+# Environment configuration
+SetEnv APP_ENV production
+SetEnv ENABLE_ADMIN_ENDPOINT true
+SetEnv ADMIN_TOKEN g67wujwhd9e-ash75s9hs-hghgh99g99Hg9-8f3k2m9x7w
+SetEnv FRONTEND_ORIGIN https://ghassate.org
+SetEnv PUBLIC_ORIGIN https://ghassate.org
+SetEnv ADMIN_EMAIL aissamraih@gmail.com
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
