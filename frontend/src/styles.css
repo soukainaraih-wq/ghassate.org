@@ -1450,6 +1450,24 @@ a {
   font-weight: 700;
 }
 
+.admin-autosave-pill {
+  margin-inline-start: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(13, 58, 42, .06);
+  font-size: 11px;
+  color: #4d655c;
+  font-weight: 700;
+}
+
+.admin-autosave-pill strong {
+  font-size: 11px;
+  color: #0d3a2a;
+}
+
 .admin-toolbar .admin-inline-actions .btn {
   border-radius: 12px;
   font-size: 13px;
@@ -1636,14 +1654,36 @@ a {
 
 .admin-dual-grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: 1.1fr 0.9fr;
+  gap: 18px;
+  grid-template-columns: 340px minmax(0, 1fr);
+  align-items: start;
+}
+
+.admin-library-panel {
+  order: 1;
+  position: sticky;
+  top: 130px;
+  max-height: calc(100vh - 150px);
+  overflow: hidden;
+}
+
+.admin-editor-panel {
+  order: 2;
+}
+
+.admin-editor-panel .admin-form-actions {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding: 12px 0 0;
+  margin-top: 4px;
 }
 
 .admin-list-card {
   display: grid;
   gap: 12px;
   align-content: start;
+  min-height: 0;
 }
 
 .admin-list-head {
@@ -1680,7 +1720,7 @@ a {
 .admin-list {
   display: grid;
   gap: 8px;
-  max-height: 600px;
+  max-height: calc(100vh - 320px);
   overflow-y: auto;
   padding-inline-end: 4px;
 }
@@ -2199,6 +2239,16 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .admin-library-panel {
+    position: static;
+    max-height: none;
+  }
+
+  .admin-editor-panel .admin-form-actions {
+    position: static;
+    background: transparent;
+  }
+
   .admin-layout {
     grid-template-columns: 1fr;
   }
@@ -2250,6 +2300,10 @@ a:focus-visible {
   .admin-welcome {
     flex-direction: column;
     text-align: center;
+  }
+
+  .admin-autosave-pill {
+    margin-inline-start: 0;
   }
 
   .admin-welcome-stat {

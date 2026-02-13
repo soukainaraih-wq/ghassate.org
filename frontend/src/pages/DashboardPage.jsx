@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import Seo from "../components/Seo";
@@ -24,6 +24,7 @@ import { DASHBOARD_SECRET_PATH } from "../lib/runtime-config";
 
 const TOKEN_STORAGE_KEY = "ghassate_admin_jwt";
 const TAB_STORAGE_KEY = "ghassate_dashboard_tab";
+const DRAFT_STORAGE_PREFIX = "ghassate_dashboard_draft";
 const tabs = ["overview", "projects", "news", "pages", "media", "settings"];
 const localizedTemplate = { ar: "", zgh: "", en: "" };
 
@@ -252,6 +253,7 @@ export default function DashboardPage() {
   const [editingNewsId, setEditingNewsId] = useState(null);
   const [editingPageId, setEditingPageId] = useState(null);
   const [editingMediaId, setEditingMediaId] = useState(null);
+  const [pageSubmitMode, setPageSubmitMode] = useState("save");
   const [projectQuery, setProjectQuery] = useState("");
   const [newsQuery, setNewsQuery] = useState("");
   const [pageQuery, setPageQuery] = useState("");
@@ -259,11 +261,47 @@ export default function DashboardPage() {
   const [mediaQuery, setMediaQuery] = useState("");
   const [mediaTypeFilter, setMediaTypeFilter] = useState("all");
   const [toasts, setToasts] = useState([]);
+  const [autoSaveLabel, setAutoSaveLabel] = useState("");
+  const autosaveTimersRef = useRef({});
+  const restoredDraftsRef = useRef(false);
+
+  const autosaveLocale = isArabic ? "ar-MA" : "en-US";
 
   const pushToast = useCallback((msg, type = "success") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, msg, type }]);
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3700);
+  }, []);
+
+  const scheduleDraftSave = useCallback((scope, payload) => {
+    if (typeof window === "undefined" || !token) {
+      return;
+    }
+
+    const timerMap = autosaveTimersRef.current;
+    if (timerMap[scope]) {
+      clearTimeout(timerMap[scope]);
+    }
+
+    timerMap[scope] = setTimeout(() => {
+      try {
+        const key = `${DRAFT_STORAGE_PREFIX}:${scope}`;
+        window.localStorage.setItem(key, JSON.stringify(payload || {}));
+        const stamp = new Date().toLocaleTimeString(autosaveLocale, {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+        setAutoSaveLabel(stamp);
+      } catch {
+      }
+    }, 900);
+  }, [autosaveLocale, token]);
+
+  const clearDraft = useCallback((scope) => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    window.localStorage.removeItem(`${DRAFT_STORAGE_PREFIX}:${scope}`);
   }, []);
 
   const tabLabels = useMemo(
@@ -434,6 +472,89 @@ export default function DashboardPage() {
     loadCms(token);
   }, [token]);
 
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    scheduleDraftSave("settings", settingsForm);
+  }, [token, settingsForm, scheduleDraftSave]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    scheduleDraftSave("project", projectForm);
+  }, [token, projectForm, scheduleDraftSave]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    scheduleDraftSave("news", newsForm);
+  }, [token, newsForm, scheduleDraftSave]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    scheduleDraftSave("page", pageForm);
+  }, [token, pageForm, scheduleDraftSave]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    scheduleDraftSave("media", mediaForm);
+  }, [token, mediaForm, scheduleDraftSave]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !token || restoredDraftsRef.current) {
+      return;
+    }
+
+    const readDraft = (scope) => {
+      try {
+        const raw = window.localStorage.getItem(`${DRAFT_STORAGE_PREFIX}:${scope}`);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const settingsDraft = readDraft("settings");
+    const projectDraft = readDraft("project");
+    const newsDraft = readDraft("news");
+    const pageDraft = readDraft("page");
+    const mediaDraft = readDraft("media");
+
+    if (settingsDraft && typeof settingsDraft === "object") {
+      setSettingsForm((prev) => (prev ? { ...prev, ...settingsDraft } : prev));
+    }
+    if (projectDraft && typeof projectDraft === "object") {
+      setProjectForm((prev) => ({ ...prev, ...projectDraft }));
+    }
+    if (newsDraft && typeof newsDraft === "object") {
+      setNewsForm((prev) => ({ ...prev, ...newsDraft }));
+    }
+    if (pageDraft && typeof pageDraft === "object") {
+      setPageForm((prev) => ({ ...prev, ...pageDraft }));
+    }
+    if (mediaDraft && typeof mediaDraft === "object") {
+      setMediaForm((prev) => ({ ...prev, ...mediaDraft }));
+    }
+
+    restoredDraftsRef.current = true;
+  }, [token]);
+
+  useEffect(() => {
+    return () => {
+      const timerMap = autosaveTimersRef.current;
+      Object.keys(timerMap).forEach((scope) => {
+        clearTimeout(timerMap[scope]);
+      });
+    };
+  }, []);
+
   async function loadCms(activeToken) {
     setLoading(true);
     setError("");
@@ -469,21 +590,25 @@ export default function DashboardPage() {
   function resetProjectForm() {
     setEditingProjectId(null);
     setProjectForm(emptyProject());
+    clearDraft("project");
   }
 
   function resetNewsForm() {
     setEditingNewsId(null);
     setNewsForm(emptyNews());
+    clearDraft("news");
   }
 
   function resetPageForm() {
     setEditingPageId(null);
     setPageForm(emptyPage());
+    clearDraft("page");
   }
 
   function resetMediaForm() {
     setEditingMediaId(null);
     setMediaForm(emptyMedia());
+    clearDraft("media");
   }
 
   async function onLogin(event) {
@@ -569,6 +694,7 @@ export default function DashboardPage() {
 
       await updateAdminSettings(token, payload);
       await loadCms(token);
+      clearDraft("settings");
       pushToast(isArabic ? "تم حفظ الإعدادات." : "Settings saved.");
     } catch (requestError) {
       setError(requestError.message || "Settings save failed.");
@@ -604,6 +730,7 @@ export default function DashboardPage() {
         await createAdminProject(token, payload);
       }
       await loadCms(token);
+      clearDraft("project");
       resetProjectForm();
       pushToast(isArabic ? "تم حفظ المشروع." : "Project saved.");
     } catch (requestError) {
@@ -655,6 +782,7 @@ export default function DashboardPage() {
         await createAdminNews(token, payload);
       }
       await loadCms(token);
+      clearDraft("news");
       resetNewsForm();
       pushToast(isArabic ? "تم حفظ الخبر." : "News saved.");
     } catch (requestError) {
@@ -696,7 +824,11 @@ export default function DashboardPage() {
         title: await buildLocalizedFromArabic(pageForm.title?.ar || ""),
         excerpt: await buildLocalizedFromArabic(pageForm.excerpt?.ar || ""),
         content: await buildLocalizedFromArabic(pageForm.content?.ar || ""),
-        status: String(pageForm.status || "published").toLowerCase(),
+        status: pageSubmitMode === "draft"
+          ? "draft"
+          : pageSubmitMode === "publish"
+            ? "published"
+            : String(pageForm.status || "published").toLowerCase(),
         publishedAt: pageForm.publishedAt || new Date().toISOString().slice(0, 10),
         updatedAt: new Date().toISOString().slice(0, 10)
       };
@@ -706,11 +838,13 @@ export default function DashboardPage() {
         await createAdminPage(token, payload);
       }
       await loadCms(token);
+      clearDraft("page");
       resetPageForm();
       pushToast(isArabic ? "تم حفظ الصفحة." : "Page saved.");
     } catch (requestError) {
       setError(requestError.message || "Page save failed.");
     } finally {
+      setPageSubmitMode("save");
       setBusy("");
     }
   }
@@ -754,6 +888,7 @@ export default function DashboardPage() {
         await createAdminMedia(token, payload);
       }
       await loadCms(token);
+      clearDraft("media");
       resetMediaForm();
       pushToast(isArabic ? "تم حفظ عنصر الوسائط." : "Media saved.");
     } catch (requestError) {
@@ -862,6 +997,10 @@ export default function DashboardPage() {
                 <p className="admin-toolbar-meta">
                   <span className="admin-status-dot"></span>
                   {isArabic ? "آخر تحديث:" : "Last update:"} <strong>{updatedAtLabel}</strong>
+                  <span className="admin-autosave-pill">
+                    {isArabic ? "حفظ تلقائي" : "Autosave"}:
+                    <strong>{autoSaveLabel || (isArabic ? "--:--" : "--:--")}</strong>
+                  </span>
                 </p>
               </div>
               <div className="admin-inline-actions">
@@ -1234,7 +1373,7 @@ export default function DashboardPage() {
 
                 {activeTab === "projects" ? (
                   <div className="admin-dual-grid">
-                    <form className="surface-card admin-form" onSubmit={saveProject}>
+                    <form className="surface-card admin-form admin-editor-panel" onSubmit={saveProject}>
                       <div className="admin-form-head">
                         <h3>{editingProjectId ? (isArabic ? "تعديل مشروع" : "Edit Project") : isArabic ? "مشروع جديد" : "New Project"}</h3>
                         {editingProjectId ? (
@@ -1283,7 +1422,7 @@ export default function DashboardPage() {
                         </button>
                       </div>
                     </form>
-                    <div className="surface-card admin-list-card">
+                    <div className="surface-card admin-list-card admin-library-panel">
                       <div className="admin-list-head">
                         <h3>{isArabic ? "قائمة المشاريع" : "Projects List"}</h3>
                         <span className="admin-list-count">
@@ -1341,7 +1480,7 @@ export default function DashboardPage() {
 
                 {activeTab === "news" ? (
                   <div className="admin-dual-grid">
-                    <form className="surface-card admin-form" onSubmit={saveNews}>
+                    <form className="surface-card admin-form admin-editor-panel" onSubmit={saveNews}>
                       <div className="admin-form-head">
                         <h3>{editingNewsId ? (isArabic ? "تعديل خبر" : "Edit News") : isArabic ? "خبر جديد" : "New News"}</h3>
                         {editingNewsId ? (
@@ -1372,7 +1511,7 @@ export default function DashboardPage() {
                         </button>
                       </div>
                     </form>
-                    <div className="surface-card admin-list-card">
+                    <div className="surface-card admin-list-card admin-library-panel">
                       <div className="admin-list-head">
                         <h3>{isArabic ? "قائمة الأخبار" : "News List"}</h3>
                         <span className="admin-list-count">
@@ -1429,7 +1568,7 @@ export default function DashboardPage() {
 
                 {activeTab === "pages" ? (
                   <div className="admin-dual-grid">
-                    <form className="surface-card admin-form" onSubmit={savePage}>
+                    <form className="surface-card admin-form admin-editor-panel" onSubmit={savePage}>
                       <div className="admin-form-head">
                         <h3>{editingPageId ? (isArabic ? "تعديل صفحة" : "Edit Page") : isArabic ? "صفحة جديدة" : "New Page"}</h3>
                         {editingPageId ? (
@@ -1475,8 +1614,21 @@ export default function DashboardPage() {
                         onChange={(c, v) => setPageForm((p) => ({ ...p, content: { ...p.content, [c]: v } }))}
                       />
                       <div className="admin-form-actions">
-                        <button className="btn btn-primary" type="submit" disabled={busy === "pages"}>
-                          {busy === "pages" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ الصفحة" : "Save Page"}
+                        <button
+                          className="btn btn-outline-ink"
+                          type="submit"
+                          disabled={busy === "pages"}
+                          onClick={() => setPageSubmitMode("draft")}
+                        >
+                          {busy === "pages" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ كمسودة" : "Save Draft"}
+                        </button>
+                        <button
+                          className="btn btn-primary"
+                          type="submit"
+                          disabled={busy === "pages"}
+                          onClick={() => setPageSubmitMode("publish")}
+                        >
+                          {busy === "pages" ? (isArabic ? "جارٍ النشر..." : "Publishing...") : isArabic ? "نشر الآن" : "Publish Now"}
                         </button>
                         <button className="btn btn-outline-ink" type="button" onClick={resetPageForm}>
                           {isArabic ? "تفريغ النموذج" : "Clear Form"}
@@ -1484,7 +1636,7 @@ export default function DashboardPage() {
                       </div>
                     </form>
 
-                    <div className="surface-card admin-list-card">
+                    <div className="surface-card admin-list-card admin-library-panel">
                       <div className="admin-list-head">
                         <h3>{isArabic ? "قائمة الصفحات" : "Pages List"}</h3>
                         <span className="admin-list-count">
@@ -1555,7 +1707,7 @@ export default function DashboardPage() {
 
                 {activeTab === "media" ? (
                   <div className="admin-dual-grid">
-                    <form className="surface-card admin-form" onSubmit={saveMedia}>
+                    <form className="surface-card admin-form admin-editor-panel" onSubmit={saveMedia}>
                       <div className="admin-form-head">
                         <h3>{editingMediaId ? (isArabic ? "تعديل وسائط" : "Edit Media") : isArabic ? "وسائط جديدة" : "New Media"}</h3>
                         {editingMediaId ? (
@@ -1587,7 +1739,7 @@ export default function DashboardPage() {
                         </button>
                       </div>
                     </form>
-                    <div className="surface-card admin-list-card">
+                    <div className="surface-card admin-list-card admin-library-panel">
                       <div className="admin-list-head">
                         <h3>{isArabic ? "قائمة الوسائط" : "Media List"}</h3>
                         <span className="admin-list-count">
