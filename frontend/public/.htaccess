@@ -2,6 +2,26 @@ Options -Indexes
 
 RewriteEngine On
 
+# ─── Cache headers ───
+<IfModule mod_headers.c>
+  # HTML: never cache (always get latest build)
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Hashed assets (JS/CSS): cache 1 year (filename changes on rebuild)
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Images/fonts: cache 30 days
+  <FilesMatch "\.(svg|png|jpg|jpeg|webp|avif|woff2?|ttf|eot)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
 # Browser default favicon request compatibility.
 RewriteRule ^favicon\.ico$ /favicon.svg [L,NC]
 
