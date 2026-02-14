@@ -1418,6 +1418,36 @@ export default function DashboardPage() {
   }
 
   const updatedAtLabel = formatShortDate(summary?.updatedAt || cms?.updatedAt, lang);
+  const useStoreLikeAdmin = true;
+
+  const previewStats = useMemo(() => {
+    const projectsCount = Array.isArray(cms?.projects) ? cms.projects.length : 0;
+    const newsCount = Array.isArray(cms?.news) ? cms.news.length : 0;
+    const pagesCount = Array.isArray(cms?.pages) ? cms.pages.length : 0;
+    const mediaCount = Array.isArray(cms?.media) ? cms.media.length : 0;
+    const interactions = (summary?.totals?.contactSubmissions || 0) + (summary?.totals?.newsletterSubscribers || 0);
+
+    return {
+      projectsCount,
+      newsCount,
+      pagesCount,
+      mediaCount,
+      interactions,
+      totalContent: projectsCount + newsCount + pagesCount
+    };
+  }, [cms?.projects, cms?.news, cms?.pages, cms?.media, summary?.totals?.contactSubmissions, summary?.totals?.newsletterSubscribers]);
+
+  const sidebarSections = useMemo(
+    () => [
+      { key: "overview", icon: "📊", label: isArabic ? "النظرة العامة" : "Overview" },
+      { key: "projects", icon: "🧩", label: isArabic ? "المشاريع" : "Projects" },
+      { key: "reports", icon: "📈", label: isArabic ? "التقارير" : "Reports" },
+      { key: "partners", icon: "🤝", label: isArabic ? "الشراكات" : "Partners" },
+      { key: "messages", icon: "💬", label: isArabic ? "الرسائل" : "Messages" },
+      { key: "settings", icon: "⚙️", label: isArabic ? "الإعدادات" : "Settings" }
+    ],
+    [isArabic]
+  );
 
   return (
     <>
@@ -1486,6 +1516,180 @@ export default function DashboardPage() {
               </button>
               {error ? <p className="form-message error">{error}</p> : null}
             </form>
+          </div>
+        ) : useStoreLikeAdmin ? (
+          <div className="assoc-dashboard">
+            <aside className="assoc-sidebar">
+              <div className="assoc-brand">
+                <div className="assoc-brand-icon">⚡</div>
+                <span>{isArabic ? "لوحة الجمعية" : "Association Admin"}</span>
+              </div>
+
+              <nav className="assoc-nav">
+                {sidebarSections.map((section) => (
+                  <button
+                    key={section.key}
+                    type="button"
+                    className={`assoc-nav-btn ${activeTab === section.key ? "is-active" : ""}`}
+                    onClick={() => setActiveTab(section.key)}
+                  >
+                    <span>{section.icon}</span>
+                    <span>{section.label}</span>
+                    {activeTab === section.key ? <span className="assoc-dot"></span> : null}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="assoc-sidebar-footer">
+                <a className="assoc-footer-btn assoc-back-btn" href={`/${lang}`}>
+                  🏠 {isArabic ? "العودة للموقع" : "Back to Site"}
+                </a>
+                <button type="button" className="assoc-footer-btn assoc-logout-btn" onClick={logout}>
+                  🚪 {isArabic ? "تسجيل خروج" : "Logout"}
+                </button>
+              </div>
+            </aside>
+
+            <main className="assoc-main">
+              {notice ? <p className="form-message success">{notice}</p> : null}
+              {error ? <p className="form-message error">{error}</p> : null}
+              {loading ? <p className="form-message loading">{content.common.loading}</p> : null}
+
+              {activeTab === "overview" ? (
+                <div className="assoc-section active">
+                  <h1 className="assoc-title">{isArabic ? "لوحة القيادة" : "Dashboard"}</h1>
+                  <p className="assoc-sub">{isArabic ? "متابعة فورية لمحتوى الجمعية وأداء النشر." : "Live monitoring of association content and publishing performance."}</p>
+
+                  <div className="assoc-stats-grid">
+                    <article className="assoc-stat-card">
+                      <div className="assoc-stat-top"><div className="assoc-stat-icon">🧩</div><span className="assoc-trend up">↑ 12%</span></div>
+                      <p className="assoc-stat-val">{previewStats.projectsCount}</p>
+                      <p className="assoc-stat-label">{isArabic ? "المشاريع" : "Projects"}</p>
+                    </article>
+                    <article className="assoc-stat-card">
+                      <div className="assoc-stat-top"><div className="assoc-stat-icon">📰</div><span className="assoc-trend up">↑ 8%</span></div>
+                      <p className="assoc-stat-val">{previewStats.newsCount}</p>
+                      <p className="assoc-stat-label">{isArabic ? "الأخبار" : "News"}</p>
+                    </article>
+                    <article className="assoc-stat-card">
+                      <div className="assoc-stat-top"><div className="assoc-stat-icon">📄</div><span className="assoc-trend down">↓ 3%</span></div>
+                      <p className="assoc-stat-val">{previewStats.pagesCount}</p>
+                      <p className="assoc-stat-label">{isArabic ? "الصفحات" : "Pages"}</p>
+                    </article>
+                    <article className="assoc-stat-card">
+                      <div className="assoc-stat-top"><div className="assoc-stat-icon">💬</div><span className="assoc-trend up">↑ 24%</span></div>
+                      <p className="assoc-stat-val">{previewStats.interactions}</p>
+                      <p className="assoc-stat-label">{isArabic ? "التفاعلات" : "Interactions"}</p>
+                    </article>
+                  </div>
+
+                  <div className="assoc-two-col">
+                    <article className="assoc-card">
+                      <div className="assoc-card-head">
+                        <h3>{isArabic ? "تحليلات المحتوى" : "Content Analytics"}</h3>
+                        <span>{updatedAtLabel}</span>
+                      </div>
+                      <div className="assoc-chart-area">
+                        <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+                          <defs>
+                            <linearGradient id="assocGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.15" />
+                              <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
+                            </linearGradient>
+                          </defs>
+                          <path d="M0,160 C100,140 150,80 200,100 C250,120 300,40 350,60 C400,80 450,20 500,50 C550,70 580,30 600,40 L600,200 L0,200 Z" fill="url(#assocGrad)" />
+                          <path d="M0,160 C100,140 150,80 200,100 C250,120 300,40 350,60 C400,80 450,20 500,50 C550,70 580,30 600,40" fill="none" stroke="#4f46e5" strokeWidth="3" />
+                        </svg>
+                      </div>
+                    </article>
+
+                    <article className="assoc-card">
+                      <h3>{isArabic ? "آخر نشاط" : "Recent Activity"}</h3>
+                      <div className="assoc-activity-list">
+                        {recentActivity.length ? recentActivity.map((row) => (
+                          <div key={row.key} className="assoc-activity-row">
+                            <span>{row.label}</span>
+                            <strong>{row.title || (isArabic ? "بدون عنوان" : "Untitled")}</strong>
+                          </div>
+                        )) : <p className="admin-empty-state">{isArabic ? "لا نشاط حتى الآن." : "No activity yet."}</p>}
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              ) : null}
+
+              {activeTab === "projects" ? (
+                <div className="assoc-section active">
+                  <div className="assoc-table-head">
+                    <div>
+                      <h1 className="assoc-title">{isArabic ? "المشاريع" : "Projects"}</h1>
+                      <p className="assoc-sub">{isArabic ? "إدارة مشاريع الجمعية" : "Manage association projects"}</p>
+                    </div>
+                    <button className="assoc-export-btn" type="button" onClick={() => setActiveTab("publishing")}>➕ {isArabic ? "إضافة مشروع" : "Add Project"}</button>
+                  </div>
+                  <div className="assoc-table-wrap">
+                    <table className="assoc-table">
+                      <thead><tr><th>{isArabic ? "المشروع" : "Project"}</th><th>{isArabic ? "التاريخ" : "Date"}</th><th>{isArabic ? "الحالة" : "Status"}</th></tr></thead>
+                      <tbody>
+                        {filteredProjects.slice(0, 8).map((item) => (
+                          <tr key={item.id}>
+                            <td>{previewLocalized(item.title, lang) || (isArabic ? "بدون عنوان" : "Untitled")}</td>
+                            <td>{formatShortDate(item.updatedAt, lang)}</td>
+                            <td><span className="assoc-badge">{previewLocalized(item.status, lang) || (isArabic ? "قيد التنفيذ" : "In progress")}</span></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : null}
+
+              {activeTab === "reports" ? (
+                <div className="assoc-section active">
+                  <h1 className="assoc-title">{isArabic ? "التقارير" : "Reports"}</h1>
+                  <p className="assoc-sub">{isArabic ? "ملخص أداء المحتوى والتفاعل" : "Content and engagement summary"}</p>
+                  <div className="assoc-stats-grid">
+                    <article className="assoc-stat-card"><p className="assoc-stat-val">{previewStats.totalContent}</p><p className="assoc-stat-label">{isArabic ? "إجمالي المحتوى" : "Total Content"}</p></article>
+                    <article className="assoc-stat-card"><p className="assoc-stat-val">{previewStats.mediaCount}</p><p className="assoc-stat-label">{isArabic ? "الوسائط" : "Media"}</p></article>
+                    <article className="assoc-stat-card"><p className="assoc-stat-val">{summary?.totals?.contactSubmissions || 0}</p><p className="assoc-stat-label">{isArabic ? "رسائل التواصل" : "Contact Messages"}</p></article>
+                  </div>
+                </div>
+              ) : null}
+
+              {activeTab === "partners" ? (
+                <div className="assoc-section active">
+                  <h1 className="assoc-title">{isArabic ? "الشراكات" : "Partnerships"}</h1>
+                  <p className="assoc-sub">{isArabic ? "إدارة الجهات والشركاء" : "Manage partners and entities"}</p>
+                  <div className="assoc-inbox-card">
+                    {(Array.isArray(cms?.projects) ? cms.projects : []).slice(0, 8).map((item) => (
+                      <div key={item.id} className="assoc-inbox-top">
+                        <strong>{previewLocalized(item.title, lang) || (isArabic ? "مشروع" : "Project")}</strong>
+                        <span>{previewLocalized(item.partners, lang) || (isArabic ? "بدون جهة شريكة" : "No partner")}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {activeTab === "messages" ? (
+                <div className="assoc-section active">
+                  <h1 className="assoc-title">{isArabic ? "الرسائل" : "Messages"}</h1>
+                  <p className="assoc-sub">{isArabic ? "متابعة الرسائل الواردة" : "Track incoming messages"}</p>
+                  <div className="assoc-inbox-card">
+                    <div className="assoc-inbox-top"><strong>{isArabic ? "رسائل التواصل" : "Contact Messages"}</strong><span>{summary?.totals?.contactSubmissions || 0}</span></div>
+                    <div className="assoc-inbox-body">{isArabic ? "يمكنك متابعة الرسائل من هذا القسم بشكل مركزي." : "You can monitor contact messages centrally from this section."}</div>
+                  </div>
+                </div>
+              ) : null}
+
+              {activeTab === "settings" ? (
+                <div className="assoc-section active">
+                  <h1 className="assoc-title">{isArabic ? "الإعدادات" : "Settings"}</h1>
+                  <p className="assoc-sub">{isArabic ? "انتقل إلى قسم الإعدادات الكامل" : "Open full settings section"}</p>
+                  <button className="assoc-export-btn" type="button" onClick={() => setActiveTab("settings")}>⚙️ {isArabic ? "إعدادات متقدمة" : "Advanced Settings"}</button>
+                </div>
+              ) : null}
+            </main>
           </div>
         ) : (
           <div className="container admin-shell">
