@@ -25,7 +25,7 @@ import { DASHBOARD_SECRET_PATH } from "../lib/runtime-config";
 const TOKEN_STORAGE_KEY = "ghassate_admin_jwt";
 const TAB_STORAGE_KEY = "ghassate_dashboard_tab";
 const DRAFT_STORAGE_PREFIX = "ghassate_dashboard_draft";
-const tabs = ["overview", "publishing", "projects", "news", "pages", "media", "insights", "settings"];
+const tabs = ["overview", "publishing", "projects", "news", "pages", "media", "partners", "reports", "insights", "settings"];
 const localizedTemplate = { ar: "", zgh: "", en: "" };
 
 /* ── Inline SVG Icons ── */
@@ -43,6 +43,8 @@ const tabIconMap = {
   news: I("M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"),
   pages: I("M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"),
   media: I("M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"),
+  partners: I("M17 20h5V4H2v16h5m10 0v-7a2 2 0 00-2-2H9a2 2 0 00-2 2v7m10 0H7"),
+  reports: I("M9 17v-6m3 6V7m3 10v-3m6 6H3"),
   insights: I("M4 19h16M7 16V8m5 8V4m5 12v-6"),
 };
 
@@ -305,6 +307,7 @@ export default function DashboardPage() {
   const [quickDestination, setQuickDestination] = useState("home");
   const [quickAiMode, setQuickAiMode] = useState("ai");
   const [quickPublishMode, setQuickPublishMode] = useState("publish");
+  const [quickScheduleDate, setQuickScheduleDate] = useState(new Date().toISOString().slice(0, 10));
   const [toasts, setToasts] = useState([]);
   const [autoSaveLabel, setAutoSaveLabel] = useState("");
   const autosaveTimersRef = useRef({});
@@ -358,6 +361,8 @@ export default function DashboardPage() {
       news: isArabic ? "الأخبار" : "News",
       pages: isArabic ? "الصفحات" : "Pages",
       media: isArabic ? "مكتبة الوسائط" : "Media Library",
+      partners: isArabic ? "الشراكات" : "Partnerships",
+      reports: isArabic ? "التقارير" : "Reports",
       insights: isArabic ? "التحليلات" : "Insights",
       settings: isArabic ? "الإعدادات العامة" : "General Settings"
     }),
@@ -371,6 +376,8 @@ export default function DashboardPage() {
       news: cms?.news?.length || 0,
       pages: cms?.pages?.length || 0,
       media: cms?.media?.length || 0,
+      partners: Array.isArray(cms?.projects) ? cms.projects.filter((item) => hasQueryMatch("", item?.partners)).length : 0,
+      reports: (cms?.projects?.length || 0) + (cms?.news?.length || 0) + (cms?.pages?.length || 0),
       insights: (summary?.totals?.contactSubmissions || 0) + (summary?.totals?.newsletterSubscribers || 0)
     }),
     [cms, summary?.totals?.contactSubmissions, summary?.totals?.newsletterSubscribers]
@@ -648,7 +655,15 @@ export default function DashboardPage() {
       return;
     }
 
+    if (!quickDestination) {
+      setError(isArabic ? "حدد مكان النشر أولاً." : "Select publish destination first.");
+      return;
+    }
+
     const destination = publishingDestinations.find((entry) => entry.value === quickDestination)?.label || (isArabic ? "الصفحة الرئيسية" : "Homepage");
+    const publishDate = quickPublishMode === "schedule"
+      ? (quickScheduleDate || new Date().toISOString().slice(0, 10))
+      : new Date().toISOString().slice(0, 10);
     const finalSummary = summary || (isArabic ? `محتوى جديد بعنوان ${title} موجّه للنشر ضمن ${destination}.` : `${title} prepared for publication in ${destination}.`);
 
     if (!body && quickAiMode === "ai") {
@@ -675,13 +690,18 @@ export default function DashboardPage() {
     setNotice("");
     try {
       if (quickKind === "news") {
+        if (quickPublishMode === "draft") {
+          setError(isArabic ? "المسودة غير مدعومة مباشرة في الأخبار. استخدم الصفحات للمسودات أو اختر نشر/جدولة." : "Draft mode is not directly supported for news. Use Pages for drafts or choose publish/schedule.");
+          setBusy("");
+          return;
+        }
         const payload = {
           title: await buildLocalizedFromArabic(title),
           excerpt: await buildLocalizedFromArabic(finalSummary),
           content: await buildLocalizedFromArabic(body),
           keyPoints: await buildLocalizedFromArabic(`${isArabic ? "وجهة النشر" : "Publish destination"}: ${destination}`),
           author: await buildLocalizedFromArabic(quickAiMode === "ai" ? (isArabic ? "تحرير ذكي بمراجعة بشرية" : "AI-assisted editorial") : (isArabic ? "تحرير يدوي" : "Manual editorial")),
-          publishedAt: new Date().toISOString().slice(0, 10)
+          publishedAt: publishDate
         };
         await createAdminNews(token, payload);
       } else if (quickKind === "pages") {
@@ -689,20 +709,25 @@ export default function DashboardPage() {
           title: await buildLocalizedFromArabic(title),
           excerpt: await buildLocalizedFromArabic(finalSummary),
           content: await buildLocalizedFromArabic(body),
-          status: quickPublishMode === "draft" ? "draft" : "published",
-          publishedAt: new Date().toISOString().slice(0, 10),
+          status: quickPublishMode === "publish" ? "published" : "draft",
+          publishedAt: publishDate,
           updatedAt: new Date().toISOString().slice(0, 10)
         };
         await createAdminPage(token, payload);
       } else {
+        const projectStatus = quickPublishMode === "draft"
+          ? (isArabic ? "مسودة مشروع" : "Project draft")
+          : quickPublishMode === "schedule"
+            ? (isArabic ? "مجدول" : "Scheduled")
+            : (isArabic ? "قيد التنفيذ" : "In progress");
         const payload = {
           title: await buildLocalizedFromArabic(title),
           category: await buildLocalizedFromArabic(isArabic ? "مشروع مؤسسي" : "Institutional Project"),
           excerpt: await buildLocalizedFromArabic(finalSummary),
-          status: await buildLocalizedFromArabic(isArabic ? "قيد التنفيذ" : "In progress"),
+          status: await buildLocalizedFromArabic(projectStatus),
           objectives: await buildLocalizedFromArabic(body),
           outcomes: await buildLocalizedFromArabic(`${isArabic ? "وجهة النشر" : "Publish destination"}: ${destination}`),
-          updatedAt: new Date().toISOString().slice(0, 10)
+          updatedAt: publishDate
         };
         await createAdminProject(token, payload);
       }
@@ -712,6 +737,9 @@ export default function DashboardPage() {
       setQuickSummary("");
       setQuickBody("");
       setQuickBodyHtml("");
+      setQuickPublishMode("publish");
+      setQuickScheduleDate(new Date().toISOString().slice(0, 10));
+      clearDraft("quick");
       if (quickEditorRef.current) {
         quickEditorRef.current.innerHTML = "";
       }
@@ -821,6 +849,35 @@ export default function DashboardPage() {
   }, [token, mediaForm, scheduleDraftSave]);
 
   useEffect(() => {
+    if (!token) {
+      return;
+    }
+    scheduleDraftSave("quick", {
+      quickKind,
+      quickTitle,
+      quickSummary,
+      quickBody,
+      quickBodyHtml,
+      quickDestination,
+      quickAiMode,
+      quickPublishMode,
+      quickScheduleDate
+    });
+  }, [
+    token,
+    quickKind,
+    quickTitle,
+    quickSummary,
+    quickBody,
+    quickBodyHtml,
+    quickDestination,
+    quickAiMode,
+    quickPublishMode,
+    quickScheduleDate,
+    scheduleDraftSave
+  ]);
+
+  useEffect(() => {
     if (typeof window === "undefined" || !token || restoredDraftsRef.current) {
       return;
     }
@@ -839,6 +896,7 @@ export default function DashboardPage() {
     const newsDraft = readDraft("news");
     const pageDraft = readDraft("page");
     const mediaDraft = readDraft("media");
+    const quickDraft = readDraft("quick");
 
     if (settingsDraft && typeof settingsDraft === "object") {
       setSettingsForm((prev) => (prev ? { ...prev, ...settingsDraft } : prev));
@@ -854,6 +912,20 @@ export default function DashboardPage() {
     }
     if (mediaDraft && typeof mediaDraft === "object") {
       setMediaForm((prev) => ({ ...prev, ...mediaDraft }));
+    }
+    if (quickDraft && typeof quickDraft === "object") {
+      setQuickKind(quickDraft.quickKind || "news");
+      setQuickTitle(quickDraft.quickTitle || "");
+      setQuickSummary(quickDraft.quickSummary || "");
+      setQuickBody(quickDraft.quickBody || "");
+      setQuickBodyHtml(quickDraft.quickBodyHtml || "");
+      setQuickDestination(quickDraft.quickDestination || "home");
+      setQuickAiMode(quickDraft.quickAiMode || "ai");
+      setQuickPublishMode(quickDraft.quickPublishMode || "publish");
+      setQuickScheduleDate(quickDraft.quickScheduleDate || new Date().toISOString().slice(0, 10));
+      if (quickEditorRef.current && quickDraft.quickBodyHtml) {
+        quickEditorRef.current.innerHTML = quickDraft.quickBodyHtml;
+      }
     }
 
     restoredDraftsRef.current = true;
@@ -1347,7 +1419,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="admin-side-nav">
                   {tabs.map((tab) => {
-                    const showCount = ["publishing", "projects", "news", "pages", "media", "insights"].includes(tab);
+                    const showCount = ["publishing", "projects", "news", "pages", "media", "partners", "reports", "insights"].includes(tab);
                     return (
                       <button
                         key={tab}
@@ -1623,13 +1695,18 @@ export default function DashboardPage() {
                                 <option value="manual">{isArabic ? "صياغة يدوية" : "Manual writing"}</option>
                               </select>
                             </label>
-                            {quickKind === "pages" ? (
+                            <label>
+                              <span>{isArabic ? "وضع النشر" : "Publish mode"}</span>
+                              <select value={quickPublishMode} onChange={(event) => setQuickPublishMode(event.target.value)}>
+                                <option value="publish">{isArabic ? "نشر الآن" : "Publish now"}</option>
+                                <option value="draft">{isArabic ? "حفظ كمسودة" : "Save draft"}</option>
+                                <option value="schedule">{isArabic ? "جدولة" : "Schedule"}</option>
+                              </select>
+                            </label>
+                            {quickPublishMode === "schedule" ? (
                               <label>
-                                <span>{isArabic ? "حالة النشر" : "Publish state"}</span>
-                                <select value={quickPublishMode} onChange={(event) => setQuickPublishMode(event.target.value)}>
-                                  <option value="publish">{isArabic ? "نشر الآن" : "Publish now"}</option>
-                                  <option value="draft">{isArabic ? "حفظ كمسودة" : "Save draft"}</option>
-                                </select>
+                                <span>{isArabic ? "تاريخ النشر" : "Publish date"}</span>
+                                <input type="date" value={quickScheduleDate} onChange={(event) => setQuickScheduleDate(event.target.value)} />
                               </label>
                             ) : null}
                           </div>
@@ -1653,6 +1730,9 @@ export default function DashboardPage() {
                               setQuickBody("");
                               setQuickSummary("");
                               setQuickTitle("");
+                              setQuickPublishMode("publish");
+                              setQuickScheduleDate(new Date().toISOString().slice(0, 10));
+                              clearDraft("quick");
                               if (quickEditorRef.current) {
                                 quickEditorRef.current.innerHTML = "";
                               }
@@ -1706,6 +1786,50 @@ export default function DashboardPage() {
                           <strong>{autoSaveLabel || "--:--"}</strong>
                         </li>
                       </ul>
+                    </article>
+                  </div>
+                ) : null}
+
+                {activeTab === "partners" ? (
+                  <div className="admin-command-grid">
+                    <article className="surface-card admin-command-card">
+                      <div className="admin-command-head">
+                        <h3>{isArabic ? "الشركاء الحاليون" : "Current Partners"}</h3>
+                        <span>{isArabic ? "من المشاريع المنشورة" : "Extracted from published projects"}</span>
+                      </div>
+                      <div className="admin-activity-list">
+                        {(Array.isArray(cms?.projects) ? cms.projects : []).slice(0, 12).map((item) => (
+                          <div className="admin-activity-item" key={`partner-${item.id}`}>
+                            <em>{isArabic ? "مشروع" : "Project"}</em>
+                            <strong>{previewLocalized(item.partners, lang) || previewLocalized(item.title, lang) || (isArabic ? "بدون عنوان" : "Untitled")}</strong>
+                          </div>
+                        ))}
+                      </div>
+                    </article>
+                  </div>
+                ) : null}
+
+                {activeTab === "reports" ? (
+                  <div className="admin-command-grid">
+                    <article className="surface-card admin-command-card">
+                      <div className="admin-command-head">
+                        <h3>{isArabic ? "تقارير المحتوى" : "Content Reports"}</h3>
+                        <span>{isArabic ? "ملخص فوري" : "Instant summary"}</span>
+                      </div>
+                      <div className="cards-grid grid-3 admin-overview-grid">
+                        <article className="surface-card admin-kpi-card">
+                          <h3>{isArabic ? "إجمالي المشاريع" : "Total projects"}</h3>
+                          <p className="admin-kpi-value">{cms?.projects?.length || 0}</p>
+                        </article>
+                        <article className="surface-card admin-kpi-card">
+                          <h3>{isArabic ? "إجمالي الأخبار" : "Total news"}</h3>
+                          <p className="admin-kpi-value">{cms?.news?.length || 0}</p>
+                        </article>
+                        <article className="surface-card admin-kpi-card">
+                          <h3>{isArabic ? "إجمالي الصفحات" : "Total pages"}</h3>
+                          <p className="admin-kpi-value">{cms?.pages?.length || 0}</p>
+                        </article>
+                      </div>
                     </article>
                   </div>
                 ) : null}
