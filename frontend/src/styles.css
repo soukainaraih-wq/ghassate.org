@@ -2470,6 +2470,84 @@ a:focus-visible {
 }
 
 @media (max-width: 420px) {
+  .assoc-dashboard {
+    padding: 10px;
+  }
+
+  .assoc-mobile-toggle {
+    top: 8px;
+    inset-inline-start: 8px;
+    height: 34px;
+    padding: 0 9px;
+    font-size: 0.72rem;
+    border-radius: 9px;
+  }
+
+  .assoc-main {
+    padding: 48px 0 0.35rem;
+  }
+
+  .assoc-title {
+    font-size: 1.25rem;
+  }
+
+  .assoc-sub {
+    font-size: 0.84rem;
+  }
+
+  .assoc-stat-card,
+  .assoc-card,
+  .assoc-table-wrap,
+  .assoc-inbox-card {
+    border-radius: 10px;
+  }
+
+  .assoc-stat-card,
+  .assoc-card,
+  .assoc-inbox-card {
+    padding: 0.72rem;
+  }
+
+  .assoc-stat-val {
+    font-size: 1.2rem;
+  }
+
+  .assoc-stat-label,
+  .assoc-trend,
+  .assoc-badge,
+  .assoc-table th,
+  .assoc-table td,
+  .assoc-activity-row,
+  .assoc-inbox-top,
+  .assoc-inbox-body {
+    font-size: 0.76rem;
+  }
+
+  .assoc-table {
+    min-width: 500px;
+  }
+
+  .assoc-table th,
+  .assoc-table td {
+    padding: 0.58rem 0.62rem;
+  }
+
+  .assoc-export-btn,
+  .assoc-footer-btn,
+  .assoc-nav-btn {
+    min-height: 38px;
+    font-size: 0.84rem;
+  }
+
+  .assoc-brand {
+    font-size: 0.92rem;
+  }
+
+  .assoc-brand-icon {
+    width: 30px;
+    height: 30px;
+  }
+
   .container {
     width: 94%;
   }
