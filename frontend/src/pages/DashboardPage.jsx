@@ -210,6 +210,30 @@ function compactText(text) {
   return String(text || "").replace(/\s+/g, " ").trim();
 }
 
+function extractRoleFromJwt(token) {
+  const raw = String(token || "").trim();
+  if (!raw) {
+    return "";
+  }
+
+  const parts = raw.split(".");
+  if (parts.length < 2) {
+    return "";
+  }
+
+  try {
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const json = typeof window !== "undefined"
+      ? window.atob(base64)
+      : Buffer.from(base64, "base64").toString("utf8");
+    const payload = JSON.parse(json);
+    const role = String(payload?.role || "").toLowerCase();
+    return ["admin", "editor", "reviewer"].includes(role) ? role : "";
+  } catch {
+    return "";
+  }
+}
+
 function emptyProject() {
   return {
     slug: "",
@@ -269,6 +293,7 @@ export default function DashboardPage() {
 
   const [token, setToken] = useState("");
   const [currentRole, setCurrentRole] = useState("admin");
+  const [isRoleLocked, setIsRoleLocked] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
@@ -816,6 +841,11 @@ export default function DashboardPage() {
 
     if (savedToken) {
       setToken(savedToken);
+      const jwtRole = extractRoleFromJwt(savedToken);
+      if (jwtRole) {
+        setCurrentRole(jwtRole);
+        setIsRoleLocked(true);
+      }
     }
 
     if (tabs.includes(savedTab)) {
@@ -1049,6 +1079,14 @@ export default function DashboardPage() {
         window.localStorage.setItem(TOKEN_STORAGE_KEY, jwt);
       }
 
+      const jwtRole = extractRoleFromJwt(jwt);
+      if (jwtRole) {
+        setCurrentRole(jwtRole);
+        setIsRoleLocked(true);
+      } else {
+        setIsRoleLocked(false);
+      }
+
       setToken(jwt);
       setNotice("");
     } catch (requestError) {
@@ -1063,6 +1101,8 @@ export default function DashboardPage() {
       window.localStorage.removeItem(TOKEN_STORAGE_KEY);
     }
     setToken("");
+    setCurrentRole("admin");
+    setIsRoleLocked(false);
     setEmailInput("");
     setPasswordInput("");
     setCms(null);
@@ -1462,14 +1502,21 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="admin-inline-actions">
-                <label className="admin-role-switch">
-                  <span>{isArabic ? "الدور" : "Role"}</span>
-                  <select value={currentRole} onChange={(event) => setCurrentRole(event.target.value)}>
-                    <option value="admin">{roleLabels.admin}</option>
-                    <option value="editor">{roleLabels.editor}</option>
-                    <option value="reviewer">{roleLabels.reviewer}</option>
-                  </select>
-                </label>
+                {isRoleLocked ? (
+                  <div className="admin-role-switch admin-role-fixed">
+                    <span>{isArabic ? "الدور" : "Role"}</span>
+                    <strong>{roleLabels[currentRole]} · {isArabic ? "من الخادم" : "Server"}</strong>
+                  </div>
+                ) : (
+                  <label className="admin-role-switch">
+                    <span>{isArabic ? "الدور" : "Role"}</span>
+                    <select value={currentRole} onChange={(event) => setCurrentRole(event.target.value)}>
+                      <option value="admin">{roleLabels.admin}</option>
+                      <option value="editor">{roleLabels.editor}</option>
+                      <option value="reviewer">{roleLabels.reviewer}</option>
+                    </select>
+                  </label>
+                )}
                 <button className="btn btn-outline-ink" type="button" onClick={() => loadCms(token)}>
                   {isArabic ? "تحديث" : "Refresh"}
                 </button>
@@ -1509,6 +1556,7 @@ export default function DashboardPage() {
                 {loading ? <p className="form-message loading">{content.common.loading}</p> : null}
                 <p className="form-message loading">
                   {isArabic ? "الدور الحالي:" : "Current role:"} <strong>{roleLabels[currentRole]}</strong>
+                  {isRoleLocked ? (isArabic ? " • مقروء من الجلسة" : " • Read from session") : (isArabic ? " • يدوي" : " • Manual")}
                   {roleCapabilities.canSettings ? (isArabic ? " • صلاحيات كاملة" : " • Full permissions") : roleCapabilities.canPublish ? (isArabic ? " • صلاحيات نشر بدون حذف" : " • Publish without delete") : (isArabic ? " • وضع مراجعة (قراءة)" : " • Review mode (read-only)")}
                 </p>
 
