@@ -34,6 +34,7 @@ html {
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  width: 100%;
 }
 
 body {
@@ -45,12 +46,18 @@ body {
     linear-gradient(180deg, #faf5eb, #f3eee0 45%, #efe9dc);
   line-height: 1.75;
   overflow-x: hidden;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Prevent any child from overflowing viewport */
-img, video, svg, iframe, canvas {
+img, video, svg, iframe, canvas, table {
   max-width: 100%;
+}
+
+img, video, canvas {
   height: auto;
 }
 
@@ -58,6 +65,8 @@ img, video, svg, iframe, canvas {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .app-root.is-en {
@@ -71,7 +80,9 @@ a {
 
 .container {
   width: min(var(--max), 92%);
+  max-width: 100%;
   margin-inline: auto;
+  overflow-x: hidden;
 }
 
 .site-main {

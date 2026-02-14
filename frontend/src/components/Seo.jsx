@@ -140,6 +140,7 @@ export default function Seo({
   return (
     <Helmet>
       <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"} />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, shrink-to-fit=no" />
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="robots" content={noindex ? "noindex,nofollow" : "index,follow"} />
