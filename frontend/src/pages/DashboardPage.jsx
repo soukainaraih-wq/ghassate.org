@@ -268,6 +268,7 @@ export default function DashboardPage() {
   const isArabic = lang !== "en";
 
   const [token, setToken] = useState("");
+  const [currentRole, setCurrentRole] = useState("admin");
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
@@ -315,6 +316,25 @@ export default function DashboardPage() {
   const quickEditorRef = useRef(null);
 
   const autosaveLocale = isArabic ? "ar-MA" : "en-US";
+
+  const roleLabels = useMemo(
+    () => ({
+      admin: isArabic ? "مدير" : "Admin",
+      editor: isArabic ? "محرر" : "Editor",
+      reviewer: isArabic ? "مراجع" : "Reviewer"
+    }),
+    [isArabic]
+  );
+
+  const roleCapabilities = useMemo(() => {
+    if (currentRole === "admin") {
+      return { canEdit: true, canPublish: true, canDelete: true, canSettings: true };
+    }
+    if (currentRole === "editor") {
+      return { canEdit: true, canPublish: true, canDelete: false, canSettings: false };
+    }
+    return { canEdit: false, canPublish: false, canDelete: false, canSettings: false };
+  }, [currentRole]);
 
   const pushToast = useCallback((msg, type = "success") => {
     const id = Date.now();
@@ -646,6 +666,10 @@ export default function DashboardPage() {
   }
 
   async function publishQuickContent() {
+    if (!roleCapabilities.canPublish) {
+      setError(isArabic ? "لا تملك صلاحية النشر." : "You do not have publishing permission.");
+      return;
+    }
     const title = quickTitle.trim();
     const summary = quickSummary.trim();
     let body = compactText((quickEditorRef.current?.innerText || quickBody || "").trim());
@@ -1060,6 +1084,10 @@ export default function DashboardPage() {
 
   async function saveSettings(event) {
     event.preventDefault();
+    if (!roleCapabilities.canSettings) {
+      setError(isArabic ? "صلاحية الإعدادات متاحة للمدير فقط." : "Settings access is admin-only.");
+      return;
+    }
     if (!settingsForm) {
       return;
     }
@@ -1094,6 +1122,10 @@ export default function DashboardPage() {
 
   async function saveProject(event) {
     event.preventDefault();
+    if (!roleCapabilities.canEdit) {
+      setError(isArabic ? "لا تملك صلاحية تعديل المحتوى." : "You do not have content editing permission.");
+      return;
+    }
     setBusy("projects");
     setError("");
     setNotice("");
@@ -1133,6 +1165,10 @@ export default function DashboardPage() {
   }
 
   async function removeProject(id) {
+    if (!roleCapabilities.canDelete) {
+      setError(isArabic ? "الحذف متاح للمدير فقط." : "Delete is admin-only.");
+      return;
+    }
     if (typeof window !== "undefined" && !window.confirm(isArabic ? "حذف المشروع؟" : "Delete project?")) {
       return;
     }
@@ -1155,6 +1191,10 @@ export default function DashboardPage() {
 
   async function saveNews(event) {
     event.preventDefault();
+    if (!roleCapabilities.canEdit) {
+      setError(isArabic ? "لا تملك صلاحية تعديل المحتوى." : "You do not have content editing permission.");
+      return;
+    }
     setBusy("news");
     setError("");
     setNotice("");
@@ -1188,6 +1228,10 @@ export default function DashboardPage() {
   }
 
   async function removeNews(id) {
+    if (!roleCapabilities.canDelete) {
+      setError(isArabic ? "الحذف متاح للمدير فقط." : "Delete is admin-only.");
+      return;
+    }
     if (typeof window !== "undefined" && !window.confirm(isArabic ? "حذف الخبر؟" : "Delete news item?")) {
       return;
     }
@@ -1210,6 +1254,10 @@ export default function DashboardPage() {
 
   async function savePage(event) {
     event.preventDefault();
+    if (!roleCapabilities.canEdit) {
+      setError(isArabic ? "لا تملك صلاحية تعديل المحتوى." : "You do not have content editing permission.");
+      return;
+    }
     setBusy("pages");
     setError("");
     setNotice("");
@@ -1248,6 +1296,10 @@ export default function DashboardPage() {
   }
 
   async function removePage(id) {
+    if (!roleCapabilities.canDelete) {
+      setError(isArabic ? "الحذف متاح للمدير فقط." : "Delete is admin-only.");
+      return;
+    }
     if (typeof window !== "undefined" && !window.confirm(isArabic ? "حذف الصفحة؟" : "Delete page?")) {
       return;
     }
@@ -1270,6 +1322,10 @@ export default function DashboardPage() {
 
   async function saveMedia(event) {
     event.preventDefault();
+    if (!roleCapabilities.canEdit) {
+      setError(isArabic ? "لا تملك صلاحية تعديل المحتوى." : "You do not have content editing permission.");
+      return;
+    }
     setBusy("media");
     setError("");
     setNotice("");
@@ -1297,6 +1353,10 @@ export default function DashboardPage() {
   }
 
   async function removeMedia(id) {
+    if (!roleCapabilities.canDelete) {
+      setError(isArabic ? "الحذف متاح للمدير فقط." : "Delete is admin-only.");
+      return;
+    }
     if (typeof window !== "undefined" && !window.confirm(isArabic ? "حذف الوسائط؟" : "Delete media item?")) {
       return;
     }
@@ -1402,6 +1462,14 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="admin-inline-actions">
+                <label className="admin-role-switch">
+                  <span>{isArabic ? "الدور" : "Role"}</span>
+                  <select value={currentRole} onChange={(event) => setCurrentRole(event.target.value)}>
+                    <option value="admin">{roleLabels.admin}</option>
+                    <option value="editor">{roleLabels.editor}</option>
+                    <option value="reviewer">{roleLabels.reviewer}</option>
+                  </select>
+                </label>
                 <button className="btn btn-outline-ink" type="button" onClick={() => loadCms(token)}>
                   {isArabic ? "تحديث" : "Refresh"}
                 </button>
@@ -1439,6 +1507,10 @@ export default function DashboardPage() {
                 {notice ? <p className="form-message success">{notice}</p> : null}
                 {error ? <p className="form-message error">{error}</p> : null}
                 {loading ? <p className="form-message loading">{content.common.loading}</p> : null}
+                <p className="form-message loading">
+                  {isArabic ? "الدور الحالي:" : "Current role:"} <strong>{roleLabels[currentRole]}</strong>
+                  {roleCapabilities.canSettings ? (isArabic ? " • صلاحيات كاملة" : " • Full permissions") : roleCapabilities.canPublish ? (isArabic ? " • صلاحيات نشر بدون حذف" : " • Publish without delete") : (isArabic ? " • وضع مراجعة (قراءة)" : " • Review mode (read-only)")}
+                </p>
 
                 <div className="admin-section-tabs">
                   {quickContentTabs.map((entry) => (
@@ -1717,7 +1789,7 @@ export default function DashboardPage() {
                         </details>
 
                         <div className="admin-form-actions">
-                          <button className="btn btn-primary" type="button" disabled={busy === "quick-publish"} onClick={publishQuickContent}>
+                          <button className="btn btn-primary" type="button" disabled={busy === "quick-publish" || !roleCapabilities.canPublish} onClick={publishQuickContent}>
                             {busy === "quick-publish"
                               ? (isArabic ? "جارٍ التنفيذ..." : "Processing...")
                               : (isArabic ? "نشر مباشر" : "Publish Directly")}
@@ -2035,7 +2107,7 @@ export default function DashboardPage() {
                         }
                       />
                     </label>
-                    <button className="btn btn-primary" type="submit" disabled={busy === "settings"}>
+                    <button className="btn btn-primary" type="submit" disabled={busy === "settings" || !roleCapabilities.canSettings}>
                       {busy === "settings" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ الإعدادات" : "Save Settings"}
                     </button>
                   </form>
@@ -2067,7 +2139,7 @@ export default function DashboardPage() {
                         />
                       </label>
                       <div className="admin-form-actions">
-                        <button className="btn btn-primary" type="submit" disabled={busy === "projects"}>
+                        <button className="btn btn-primary" type="submit" disabled={busy === "projects" || !roleCapabilities.canEdit}>
                           {busy === "projects" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ المشروع" : "Save Project"}
                         </button>
                         <button className="btn btn-outline-ink" type="button" onClick={resetProjectForm}>
@@ -2117,7 +2189,7 @@ export default function DashboardPage() {
                                 >
                                   {isArabic ? "تعديل" : "Edit"}
                                 </button>
-                                <button type="button" className="btn btn-danger" disabled={busy === `project-${item.id}`} onClick={() => removeProject(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `project-${item.id}` || !roleCapabilities.canDelete} onClick={() => removeProject(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -2200,7 +2272,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <div className="admin-form-actions">
-                        <button className="btn btn-primary" type="submit" disabled={busy === "news"}>
+                        <button className="btn btn-primary" type="submit" disabled={busy === "news" || !roleCapabilities.canPublish}>
                           {busy === "news" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "نشر الخبر" : "Publish News"}
                         </button>
                         <button className="btn btn-outline-ink" type="button" onClick={resetNewsForm}>
@@ -2249,7 +2321,7 @@ export default function DashboardPage() {
                                 >
                                   {isArabic ? "تعديل" : "Edit"}
                                 </button>
-                                <button type="button" className="btn btn-danger" disabled={busy === `news-${item.id}`} onClick={() => removeNews(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `news-${item.id}` || !roleCapabilities.canDelete} onClick={() => removeNews(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -2335,7 +2407,7 @@ export default function DashboardPage() {
                         <button
                           className="btn btn-outline-ink"
                           type="submit"
-                          disabled={busy === "pages"}
+                          disabled={busy === "pages" || !roleCapabilities.canPublish}
                           onClick={() => setPageSubmitMode("draft")}
                         >
                           {busy === "pages" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ كمسودة" : "Save Draft"}
@@ -2343,7 +2415,7 @@ export default function DashboardPage() {
                         <button
                           className="btn btn-primary"
                           type="submit"
-                          disabled={busy === "pages"}
+                          disabled={busy === "pages" || !roleCapabilities.canPublish}
                           onClick={() => setPageSubmitMode("publish")}
                         >
                           {busy === "pages" ? (isArabic ? "جارٍ النشر..." : "Publishing...") : isArabic ? "نشر الآن" : "Publish Now"}
@@ -2409,7 +2481,7 @@ export default function DashboardPage() {
                                     {isArabic ? "فتح" : "Open"}
                                   </a>
                                 ) : null}
-                                <button type="button" className="btn btn-danger" disabled={busy === `page-${item.id}`} onClick={() => removePage(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `page-${item.id}` || !roleCapabilities.canDelete} onClick={() => removePage(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>
@@ -2449,7 +2521,7 @@ export default function DashboardPage() {
                       <label><span>{isArabic ? "الرابط" : "URL"}</span><input value={mediaForm.url} onChange={(e) => setMediaForm((p) => ({ ...p, url: e.target.value }))} required /></label>
                       <label><span>{isArabic ? "الصورة المصغرة" : "Thumbnail URL"}</span><input value={mediaForm.thumbnail} onChange={(e) => setMediaForm((p) => ({ ...p, thumbnail: e.target.value }))} /></label>
                       <div className="admin-form-actions">
-                        <button className="btn btn-primary" type="submit" disabled={busy === "media"}>
+                        <button className="btn btn-primary" type="submit" disabled={busy === "media" || !roleCapabilities.canEdit}>
                           {busy === "media" ? (isArabic ? "جارٍ الحفظ..." : "Saving...") : isArabic ? "حفظ الوسائط" : "Save Media"}
                         </button>
                         <button className="btn btn-outline-ink" type="button" onClick={resetMediaForm}>
@@ -2511,7 +2583,7 @@ export default function DashboardPage() {
                                 >
                                   {isArabic ? "تعديل" : "Edit"}
                                 </button>
-                                <button type="button" className="btn btn-danger" disabled={busy === `media-${item.id}`} onClick={() => removeMedia(item.id)}>
+                                <button type="button" className="btn btn-danger" disabled={busy === `media-${item.id}` || !roleCapabilities.canDelete} onClick={() => removeMedia(item.id)}>
                                   {isArabic ? "حذف" : "Delete"}
                                 </button>
                               </div>

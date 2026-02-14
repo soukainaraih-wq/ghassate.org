@@ -2950,6 +2950,24 @@ a:focus-visible {
   gap: 10px;
 }
 
+.admin-role-switch {
+  display: inline-grid;
+  gap: 4px;
+  font-size: 12px;
+  color: #7a4a16;
+  font-weight: 700;
+}
+
+.admin-role-switch select {
+  min-width: 120px;
+  border: 1px solid rgba(217, 150, 63, 0.3);
+  border-radius: 10px;
+  background: #fff;
+  color: #7a4a16;
+  padding: 6px 10px;
+  font: inherit;
+}
+
 @media (max-width: 1080px) {
   .admin-sidebar {
     min-height: auto;
