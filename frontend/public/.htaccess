@@ -2,6 +2,9 @@ Options -Indexes
 
 RewriteEngine On
 
+# Browser default favicon request compatibility.
+RewriteRule ^favicon\.ico$ /favicon.svg [L,NC]
+
 # Keep PHP backend routes untouched.
 RewriteCond %{REQUEST_URI} ^/api(/|$) [NC]
 RewriteRule ^ - [L]
