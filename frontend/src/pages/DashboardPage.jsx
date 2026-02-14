@@ -330,6 +330,7 @@ export default function DashboardPage() {
   const [quickSummary, setQuickSummary] = useState("");
   const [quickBody, setQuickBody] = useState("");
   const [quickBodyHtml, setQuickBodyHtml] = useState("");
+  const [isAssocSidebarOpen, setIsAssocSidebarOpen] = useState(false);
   const [quickDestination, setQuickDestination] = useState("home");
   const [quickAiMode, setQuickAiMode] = useState("ai");
   const [quickPublishMode, setQuickPublishMode] = useState("publish");
@@ -1519,7 +1520,20 @@ export default function DashboardPage() {
           </div>
         ) : useStoreLikeAdmin ? (
           <div className="assoc-dashboard">
-            <aside className="assoc-sidebar">
+            <button
+              type="button"
+              className="assoc-mobile-toggle"
+              onClick={() => setIsAssocSidebarOpen((value) => !value)}
+            >
+              ☰ {isArabic ? "القائمة" : "Menu"}
+            </button>
+
+            <div
+              className={`assoc-sidebar-backdrop ${isAssocSidebarOpen ? "is-open" : ""}`}
+              onClick={() => setIsAssocSidebarOpen(false)}
+            ></div>
+
+            <aside className={`assoc-sidebar ${isAssocSidebarOpen ? "is-open" : ""}`}>
               <div className="assoc-brand">
                 <div className="assoc-brand-icon">⚡</div>
                 <span>{isArabic ? "لوحة الجمعية" : "Association Admin"}</span>
@@ -1531,7 +1545,10 @@ export default function DashboardPage() {
                     key={section.key}
                     type="button"
                     className={`assoc-nav-btn ${activeTab === section.key ? "is-active" : ""}`}
-                    onClick={() => setActiveTab(section.key)}
+                    onClick={() => {
+                      setActiveTab(section.key);
+                      setIsAssocSidebarOpen(false);
+                    }}
                   >
                     <span>{section.icon}</span>
                     <span>{section.label}</span>
@@ -1544,7 +1561,14 @@ export default function DashboardPage() {
                 <a className="assoc-footer-btn assoc-back-btn" href={`/${lang}`}>
                   🏠 {isArabic ? "العودة للموقع" : "Back to Site"}
                 </a>
-                <button type="button" className="assoc-footer-btn assoc-logout-btn" onClick={logout}>
+                <button
+                  type="button"
+                  className="assoc-footer-btn assoc-logout-btn"
+                  onClick={() => {
+                    setIsAssocSidebarOpen(false);
+                    logout();
+                  }}
+                >
                   🚪 {isArabic ? "تسجيل خروج" : "Logout"}
                 </button>
               </div>
