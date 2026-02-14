@@ -862,6 +862,30 @@ export default function DashboardPage() {
   }, [activeTab]);
 
   useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    if (!isAssocSidebarOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    const media = typeof window !== "undefined" ? window.matchMedia("(max-width: 1024px)") : null;
+    const shouldLock = !media || media.matches;
+    if (!shouldLock) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isAssocSidebarOpen]);
+
+  useEffect(() => {
     if (!token) {
       return;
     }
